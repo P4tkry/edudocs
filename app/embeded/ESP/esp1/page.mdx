@@ -1,0 +1,71 @@
+import TaskDropdown from '../../../../components/TaskDropdown';
+import Invisible from "../../../../components/Invisible";
+
+
+# Pierwszy krok z ESP
+
+Zakładając, że posiadasz już podstawową wiedzę z zakresu programowania mikrokontrolerów (np. z poprzedniego modułu o Arduino), możemy przejść do pracy z ESP.
+
+## Pierwsze zadanie - Migająca wbudowana dioda na ESP
+Poszukaj informacji, jaki pin odpowiada za wbudowaną diodę LED w Twoim modelu ESP.
+Następnie napisz program, który będzie migał tą diodą co sekundę.
+
+
+<TaskDropdown>
+    przykladowy kod:
+    ```cpp
+    #include <Arduino.h>
+
+    void setup() {
+    pinMode(8, OUTPUT); // Ustawiamy wbudowaną diodę jako wyjście - pin 8 dla ESP32 C3 supermini
+}
+
+    void loop() {
+    digitalWrite(8, HIGH); // Włączamy diodę
+    delay(1000);                     // Czekamy sekundę
+    digitalWrite(8, LOW);  // Wyłączamy diodę
+    delay(1000);                     // Czekamy sekundę
+}
+    ```
+    <Invisible>
+        ```
+</Arduino.h>
+    ```
+</Invisible>
+</TaskDropdown>
+
+## Drugie zadanie - Odczyt stanu przycisku
+
+Podłącz przycisk do jednego z pinów GPIO na ESP oraz do GND. Napisz program, który będzie odczytywał stan przycisku i włączał wbudowaną diodę LED, gdy przycisk jest wciśnięty, a wyłączał ją, gdy przycisk jest zwolniony.
+
+<TaskDropdown>
+    przykladowy kod:
+    ```cpp
+    #include <Arduino.h>
+    #define BUTTON_PIN 2 // Deklaracje dla preprocesora - mówimy że teraz za każdym razem gdy użyjemy BUTTON_PIN to
+    znaczy 2
+    #define LED_PIN 8
+
+    void setup() {
+    pinMode(LED_PIN, OUTPUT); // Ustawiamy wbudowaną diodę jako wyjście
+    pinMode(BUTTON_PIN, INPUT);    // Ustawiamy pin przycisku jako wejście
+}
+
+    void loop() {
+    int buttonState = digitalRead(BUTTON_PIN); // Odczytujemy stan przycisku
+    if (buttonState == HIGH) {                 // Jeśli przycisk jest wciśnięty
+    digitalWrite(LED_PIN, HIGH);      // Włączamy diodę
+} else {
+    digitalWrite(LED_PIN, LOW);       // Wyłączamy diodę
+}
+}
+    ```
+    <Invisible>
+        ```
+</Arduino.h>
+    ```
+</Invisible>
+</TaskDropdown>
+
+## Podsumowanie
+W tym rozdziale powtórzyliśmy podstawy programowania mikrokontrolerów. Podobne zadania realizowaliśmy w module Arduino - teraz jednak wykorzystaliśmy do tego platformę ESP. W kolejnych modułach będziemy zgłębiać bardziej zaawansowane funkcje i możliwości ESP, takie jak łączność Wi-Fi i Bluetooth.

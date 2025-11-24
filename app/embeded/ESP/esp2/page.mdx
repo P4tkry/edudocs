@@ -1,0 +1,121 @@
+# WiFi
+
+W tym rozdzale przyjżymy się jak podłączyć naszą płytkę do sieci WiFi. Omówimy
+podstawowe sposoby konfiguracji połączenia oraz jak sprawdzić, czy połączenie
+zostało nawiązane pomyślnie.
+
+## Łączenie się z siecią WiFi
+
+1. Pierwszym krokiem jest dołączenie odpowiedniej biblioteki do naszego szkicu.
+   W przypadku płytek ESP8266 używamy biblioteki `ESP8266WiFi.h`, a dla ESP32 -
+   `WiFi.h`.
+
+```cpp
+#include <Arduino.h>
+#include <WiFi.h> // Dla ESP32
+```
+
+lub
+
+```cpp
+#include <Arduino.h>
+#include <ESP8266WiFi.h> // Dla ESP8266
+```
+
+2. Następnie definiujemy nazwę sieci (SSID) oraz hasło do niej.
+
+```cpp
+const char* ssid = "Twoja_Siec_WiFi";
+const char* passwd = "Twoje_Haslo_WiFi";
+```
+
+3. W funkcji `setup()` inicjalizujemy połączenie WiFi.
+
+```cpp
+void setup() {
+  Serial.begin(115200); // Inicjalizacja portu szeregowego na prędkość 115200 bps
+  WiFi.begin(ssid, passwd); // Rozpoczęcie połączenia z siecią WiFi
+
+  Serial.print("Łączenie z siecią WiFi");
+  while (WiFi.status() != WL_CONNECTED) { // Czekamy na połączenie
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nPołączono z siecią WiFi!");
+  Serial.print("Adres IP: ");
+  Serial.println(WiFi.localIP()); // Wyświetlenie przydzielonego adresu IP
+}
+```
+
+`WiFi.status()` zwraca aktualny stan połączenia. Może przyjmować różne wartości,
+takie jak:
+
+- `WL_CONNECTED` – urządzenie jest połączone z siecią WiFi
+- `WL_NO_SHIELD` – brak modułu/shielda WiFi
+- `WL_IDLE_STATUS` – status tymczasowy po wywołaniu `WiFi.begin()`
+- `WL_NO_SSID_AVAIL` – nie znaleziono podanej sieci (SSID niedostępny)
+- `WL_SCAN_COMPLETED` – skanowanie dostępnych sieci zakończone
+- `WL_CONNECT_FAILED` – nieudana próba połączenia
+- `WL_CONNECTION_LOST` – połączenie zostało utracone
+- `WL_DISCONNECTED` – urządzenie jest rozłączone z siecią
+
+4. W funkcji `loop()` możemy umieścić kod, który będzie wykonywany po nawiązaniu
+   połączenia.
+
+```cpp
+void loop() {
+  // Tutaj możesz umieścić kod, który będzie wykonywany po nawiązaniu połączenia
+}
+```
+
+## Tworzenie punktu dostępowego (Access Point) - własna sieć WiFi
+
+Innym sposobem korzystania z WiFi jest utworzenie własnej sieci, do której inne
+urządzenia mogą się łączyć. Możemy to zrobić, konfigurując ESP jako punkt
+dostępowy (Access Point).
+
+1. Tak jak wcześniej, dołączamy odpowiednią bibliotekę.
+
+```cpp
+#include <Arduino.h>
+#include <WiFi.h> // Dla ESP32
+// #include <ESP8266WiFi.h> // Dla ESP8266
+```
+
+2. Definiujemy nazwę sieci (SSID) oraz hasło do niej.
+
+```cpp
+const char* ssid = "Moja_Siec_WiFi";
+const char* passwd = "Moje_Haslo_WiFi";
+```
+
+3. W funkcji `setup()` konfigurujemy ESP jako punkt dostępowy.
+
+```cpp
+void setup() {
+  Serial.begin(115200); // Inicjalizacja portu szeregowego na prędkość 115200 bps
+  WiFi.softAP(ssid, passwd); // Utworzenie punktu dostępowego
+
+  Serial.println("Punkt dostępowy utworzony!");
+  Serial.print("Nazwa sieci (SSID): ");
+  Serial.println(ssid);
+  Serial.print("Adres IP punktu dostępowego: ");
+  Serial.println(WiFi.softAPIP()); // Wyświetlenie adresu IP punktu dostępowego
+}
+```
+
+4. W funkcji `loop()` możemy umieścić kod, który będzie wykonywany po utworzeniu
+   punktu dostępowego.
+
+```cpp
+void loop() {
+  // Tutaj możesz umieścić kod, który będzie wykonywany po utworzeniu punktu dostępowego
+}
+```
+
+## Podsumowanie
+
+W tym rozdziale nauczyliśmy się, jak łączyć się z siecią WiFi oraz jak tworzyć
+własny punkt dostępowy za pomocą płytek ESP8266 i ESP32. Te umiejętności pozwolą
+nam w dalszej części kursu na korzystanie z funkcji sieciowych, takich jak
+przesyłanie danych do chmury czy komunikacja między urządzeniami.

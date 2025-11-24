@@ -1,0 +1,192 @@
+﻿---
+id: 01-mod
+title: Urządzenia i moduły
+---
+# Urządzenia i moduły
+W tej części kursu zapoznamy się z różnymi urządzeniami i modułami, które możemy podłączyć do Arduino, aby rozszerzyć jego funkcjonalność. Omówimy podstawowe zasady działania oraz przykłady użycia popularnych modułów. Jednak nie licz na proste zadania — **tutaj zacznie się prawdziwa zabawa bez trzymanki!**
+
+## Czujnik GY-NEO6MV2 (IMU)
+Czujnik GY-NEO6MV2 to moduł GPS, który pozwala na określenie pozycji geograficznej, prędkości, wysokości oraz kierunku ruchu. Moduł ten wykorzystuje sygnały satelitarne do precyzyjnego określenia lokalizacji.
+
+### Zadanie: Sprawdź protokół komunikacji
+
+Zweryfikuj, jakiego protokołu komunikacji używa ten moduł (np. UART, I2C, SPI).
+
+
+import ProtocolQuiz from '@site/src/components/ProtocolQuiz';
+
+<ProtocolQuiz />
+
+### Zadanie 1
+
+Stwórz prosty program, który odczytuje dane z modułu i wyświetla je w Monitorze szeregowym Arduino IDE. 
+
+
+<details>
+<summary>Podpowiedź</summary>
+
+Zauważ, że moduł GY-NEO6MV2 komunikuje się za pomocą protokołu UART.
+- Podłącz piny TX modułu do pinu RX Arduino i RX modułu do pinu TX Arduino.
+- Użyj biblioteki `SoftwareSerial`, aby utworzyć dodatkowy port szeregowy (zrób to aby nie kolidować z wbudowanym portem szeregowym używanym do komunikacji z komputerem).
+- Skonfiguruj prędkość transmisji na 9600 bps - to standardowa prędkość dla modułów GPS.
+- Odczytuj dane z modułu i wyświetlaj je w Monitorze szeregowym - tym dla komputera.
+</details>
+
+<details>
+<summary>Podpowiedź (kod)</summary>
+```cpp
+#include <SoftwareSerial.h>
+
+static const int RXPin = 4;   // GPS TX -> 4
+static const int TXPin = 3;   // GPS RX -> 3
+static const uint32_t GPSBaud = 9600;
+
+SoftwareSerial gpsSerial(RXPin, TXPin);
+
+void setup() {
+  Serial.begin(9600);
+  gpsSerial.begin(GPSBaud);
+  Serial.println("Start GPS (surowe NMEA)...");
+}
+
+void loop() {
+  while (gpsSerial.available() > 0) {
+    char c = gpsSerial.read();
+    Serial.write(c);  // po prostu przepuszczamy na monitor
+  }
+}
+```
+To nic trudnego po prostu odczytujemy surowe dane wysyłane przez moduł GPS i przekazujemy je do monitora szeregowego.
+Output w Monitorze szeregowym będzie wyglądał mniej więcej tak:
+```
+$GPRMC,123519,A,5231.1234,N,02059.5678,E,0.45,054.7,220625,,,A*68
+$GPGGA,123519,5231.1234,N,02059.5678,E,1,08,0.9,100.0,M,46.9,M,,*47
+```
+</details>
+
+### Zad 2
+Napisz program, który analizuje dane NMEA(National Marine Electronics Association) z modułu GPS i wyświetla aktualną szerokość i długość geograficzną w Monitorze szeregowym.
+
+<details>
+<summary>Podpowiedź</summary>
+
+Do tego zadania możesz podejść dwojako:
+- Ręcznie parsować dane NMEA, szukając linii zaczynających się od `$GPRMC` lub `$GPGGA` i wyciągając z nich odpowiednie pola.
+- Użyć gotowej biblioteki, takiej jak `TinyGPS++`, która upraszcza odczyt i analizę danych GPS.
+</details>
+
+### Podsumowanie
+Brawo! Wykonałeś zadania związane z modułem GPS GY-NEO6MV2. Teraz potrafisz podłączyć moduł GPS do Arduino, odczytać surowe dane NMEA oraz wyświetlić aktualną pozycję geograficzną. To świetny krok w kierunku tworzenia bardziej zaawansowanych projektów z wykorzystaniem lokalizacji GPS!
+
+## Moduł czujnika odległości HC-SR04
+Moduł HC-SR04 to popularny czujnik ultradźwiękowy, który pozwala na pomiar odległości do przeszkód. Działa na zasadzie wysyłania fal ultradźwiękowych i mierzenia czasu, jaki zajmuje im powrót po odbiciu od obiektu.
+
+### Zadanie 1 - Pomiar odległości
+Stwórz program, który wykorzystuje moduł HC-SR04 do pomiaru odległości i wyświetla wynik w Monitorze szeregowym.
+
+<details>
+<summary>Podpowiedź</summary>
+
+Aby zmierzyć odległość za pomocą HC-SR04, musisz podłączyć piny Trig i Echo do odpowiednich pinów Arduino. Następnie użyj funkcji `pulseIn()` do zmierzenia czasu trwania impulsu na pinie Echo. Na podstawie tego czasu możesz obliczyć odległość.
+
+```cpp
+const int trigPin = 9;
+const int echoPin = 10;
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+void loop() {
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    long duration = pulseIn(echoPin, HIGH);
+    long distance = duration * 0.034 / 2; // Prędkość dźwięku to 0.034 cm/µs
+    Serial.print("Odległość: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+    delay(1000);
+}
+```
+
+</details>
+
+### Podsumowanie
+Gratulacje! Udało Ci się podłączyć moduł HC-SR04 do Arduino i zmierzyć odległość do przeszkód. Teraz możesz wykorzystać ten czujnik w swoich projektach, na przykład do tworzenia robotów unikających przeszkód lub systemów alarmowych.
+
+### LCD 16x2 z interfejsem I2C
+Moduł LCD 16x2 z interfejsem I2C to wygodne rozwiązanie do wyświetlania tekstu na ekranie. Dzięki interfejsowi I2C, potrzebujesz tylko dwóch pinów do komunikacji z Arduino.
+
+### Zadanie 1 - Wyświetlanie tekstu na LCD
+Stwórz program, który wyświetla "Hello world!" na ekranie LCD 16x2.
+
+<details>
+<summary>Podpowiedź</summary>
+
+Aby korzystać z LCD 16x2 z interfejsem I2C, musisz zainstalować bibliotekę `LiquidCrystal_I2C`. Możesz to zrobić przez Menedżera bibliotek w Arduino IDE.
+
+```cpp
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2); // Adres I2C może się różnić - choć 0x27 jest najczęstszy
+void setup() {
+    lcd.init();
+    lcd.backlight();
+    lcd.clear();
+    lcd.print("Hello world!");
+}
+void loop() {
+    // Nic więcej nie trzeba robić w pętli
+}
+```
+</details>
+
+### Podsumowanie
+Świetnie! Udało Ci się podłączyć moduł LCD 16x2 z interfejsem I2C do Arduino i wyświetlić na nim tekst. Teraz możesz eksperymentować z wyświetlaniem różnych informacji, takich jak odczyty z czujników czy komunikaty dla użytkownika.
+
+## ITG/MPU hw-123 
+Moduł ITG/MPU hw-123 to przemieszczenia, który łączy w sobie akcelerometr i żyroskop. Pozwala na pomiar przyspieszenia oraz prędkości kątowej w trzech osiach.
+
+:::warning 
+**Uwaga:** To zadanie jest trochę bardziej zaawansowane! Ale nie poddawaj się — to świetna okazja, aby nauczyć się czegoś nowego!
+:::
+
+### Zadanie 1 - Odczyt danych z ITG/MPU hw-123
+Stwórz program, który odczytuje dane z modułu ITG/MPU hw-123 i wyświetla je w Monitorze szeregowym.
+
+<details>
+<summary>Podpowiedź</summary>
+
+Aby odczytać dane z modułu ITG/MPU hw-123, możesz użyć biblioteki `MPU6050`. Zainstaluj ją przez Menedżera bibliotek w Arduino IDE.
+
+```cpp
+#include <Wire.h>
+#include <MPU6050.h>
+MPU6050 mpu;
+void setup() {
+    Serial.begin(9600);
+    Wire.begin();
+    mpu.initialize();
+    if (!mpu.testConnection()) {
+        Serial.println("MPU6050 connection failed");
+        while (1);
+    }
+}
+void loop() {
+    int16_t ax, ay, az;
+    int16_t gx, gy, gz;
+    mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    Serial.print("a/g:\t");
+    Serial.print(ax); Serial.print("\t");
+    Serial.print(ay); Serial.print("\t");
+    Serial.print(az); Serial.print("\t");
+    Serial.print(gx); Serial.print("\t");
+    Serial.print(gy); Serial.print("\t");
+    Serial.println(gz);
+    delay(500);
+}
+```
+</details>
