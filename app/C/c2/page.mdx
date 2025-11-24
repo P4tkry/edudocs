@@ -1,0 +1,29 @@
+# Wskaźniki
+
+Wskaźniki to jeden z najważniejszych elementów języka C.  
+Możesz myśleć o nich jak o **zmiennych, które przechowują adres innej zmiennej**, a nie jej wartość.
+
+Każda zmienna w programie znajduje się w określonym miejscu w pamięci komputera — ma swój **adres**.  
+Wskaźnik pozwala ten adres zapisać i później go wykorzystać.
+
+### Kluczowe cechy wskaźników:
+
+- Wskaźnik przechowuje **adres** wartości, a nie samą wartość.  
+- Typ wskaźnika mówi, **na jaki typ danych wskazuje**, np.  
+  - `int *` → wskaźnik na `int`  
+  - `char *` → wskaźnik na `char`  
+- Operator `&` pobiera adres zmiennej.  
+- Operator `*` pozwala odczytać lub zmienić wartość, na którą wskaźnik wskazuje (**dereferencja**).
+
+### Najprostszy przykład
+
+```c
+int x = 10;
+int *ptr = &x;   // ptr przechowuje adres zmiennej x
+
+printf("%d\n", x);     // wartość zmiennej
+printf("%p\n", ptr);   // adres zmiennej
+printf("%d\n", *ptr);  // dereferencja — wartość znajdująca się pod adresem
+````
+
+Wskaźniki dają dużą kontrolę nad pamięcią, dlatego są kluczowe m.in. przy tablicach, funkcjach, dynamicznej pamięci i strukturach danych.

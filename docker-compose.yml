@@ -9,3 +9,16 @@ services:
       - "1912:3000"
     environment:
       - NODE_ENV=production
+
+  piston:
+    image: ghcr.io/engineer-man/piston:latest
+    container_name: piston
+    privileged: true
+    ports:
+      - "2000:2000"
+    volumes:
+      - piston_data:/piston
+    restart: unless-stopped
+
+volumes:
+  piston_data:
