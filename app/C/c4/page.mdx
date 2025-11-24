@@ -1,0 +1,522 @@
+import QuizQuestion from '../../../components/QuizQuestion';
+
+# Pętle
+
+Pętle pozwalają **powtarzać fragment kodu**, dopóki spełniony jest określony
+warunek lub aż wykonają się określoną liczbę razy.  
+W języku C mamy trzy podstawowe instrukcje iteracyjne:
+
+- `while`
+- `for`
+- `do … while`
+
+Każda z nich działa inaczej, ale wszystkie pozwalają na wykonywanie
+powtarzalnych operacji.
+
+---
+
+## Wartość logiczna warunku
+
+Warunek w pętli to wyrażenie logiczne:
+
+- `0` → **fałsz**
+- wartości **niezerowe** → **prawda**
+
+> [!NOTE] **W C nie istnieje typ logiczny w wersjach przed C99.**  
+> Od C99 dostępny jest nagłówek `stdbool.h` oraz typ `bool`, ale tradycyjnie
+> wciąż używa się `int`.
+
+---
+
+## `while` — pętla z testem na początku
+
+Pętla `while` wykonuje się **dopóki warunek jest prawdziwy**.
+
+```c
+while (warunek) {
+    // kod
+}
+```
+
+### Przykład: wypisz liczby od 1 do 5
+
+```c
+int i = 1;
+while (i <= 5) {
+    printf("%d\n", i);
+    ++i;
+}
+```
+
+> [!NOTE] Jeżeli warunek jest od początku fałszywy — kod wewnątrz pętli **nie
+> wykona się ani razu**.
+
+---
+
+## `for` — pętla licznikowa
+
+Najbardziej uniwersalna pętla — idealna, gdy znasz liczbę iteracji.
+
+```c
+for (inicjalizacja; warunek; modyfikacja) {
+    // kod
+}
+```
+
+### Przykład: wypisz liczby od 1 do 5
+
+```c
+for (int i = 1; i <= 5; ++i) {
+    printf("%d\n", i);
+}
+```
+
+> [!NOTE] Od **C99** można deklarować zmienne licznika _bezpośrednio_ w nagłówku
+> pętli (`for(int i = 0; ...)`). W C90 było to błędem.
+
+---
+
+## `do … while` — pętla z testem na końcu
+
+Gwarantuje **co najmniej jedno wykonanie** kodu.
+
+```c
+do {
+    // kod
+} while (warunek);
+```
+
+### Przykład: pobieranie liczby aż użytkownik wpisze dodatnią
+
+```c
+int x;
+do {
+    printf("Podaj dodatnia liczbe: ");
+    scanf("%d", &x);
+} while (x <= 0);
+```
+
+---
+
+## Różnice między pętlami
+
+| Pętla        | Testowanie warunku | Główne zastosowanie         |
+| ------------ | ------------------ | --------------------------- |
+| `while`      | na początku        | dopóki coś trwa             |
+| `for`        | na początku        | iteracje z licznikiem       |
+| `do … while` | na końcu           | co najmniej jedno wykonanie |
+
+---
+
+## `break` — natychmiastowe wyjście z pętli
+
+```c
+for (int i = 0; i < 10; ++i) {
+    if (i == 5)
+        break;
+}
+```
+
+Przerywa całą pętlę.
+
+---
+
+## `continue` — pominięcie reszty iteracji
+
+```c
+for (int i = 0; i < 10; ++i) {
+    if (i % 2 == 0)
+        continue;  // pomiń parzyste
+    printf("%d\n", i);
+}
+```
+
+> [!NOTE] Nadużywanie `break` i `continue` prowadzi do mniej czytelnego kodu,
+> ale w niektórych sytuacjach są bardzo praktyczne.
+
+---
+
+## Nieskończone pętle
+
+```c
+while (1) {
+    // ...
+}
+```
+
+> [!NOTE] Zaleca się ostrożność — jeśli pętla nie ma poprawnego warunku
+> zatrzymania, może doprowadzić do zawieszenia programu.
+
+---
+
+## Typowe błędy i pułapki
+
+### Pomijanie aktualizacji licznika
+
+```c
+int i = 0;
+while (i < 10) {
+    printf("%d\n", i);
+    // zapomniano o ++i;
+}
+```
+
+→ pętla nieskończona
+
+---
+
+### Korzystanie z danych nieprzygotowanych przez `scanf`
+
+```c
+int x;
+while (scanf("%d", &x) != 1) {
+    // ...
+}
+```
+
+> [!NOTE] `scanf` **zwraca liczbę poprawnie wczytanych argumentów** — zawsze
+> trzeba to sprawdzać. W oficjalnych materiałach POPRO zwracanie wyniku `scanf`
+> jest wyraźnie podkreślane.
+
+---
+
+## Quiz
+
+<QuizQuestion
+    question="Która pętla wykona się co najmniej jeden raz?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'while', correct: false },
+        { id: 'b', text: 'for', correct: false },
+        { id: 'c', text: 'do … while', correct: true },
+    ]}
+/>
+
+---
+
+<QuizQuestion
+    question="Co robi instrukcja continue?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'Kończy całą pętlę', correct: false },
+        {
+            id: 'b',
+            text: 'Pomija resztę iteracji i przechodzi do kolejnej',
+            correct: true,
+        },
+        { id: 'c', text: 'Resetuje licznik pętli', correct: false },
+    ]}
+/>
+
+---
+
+```c
+int i = 0;
+while (i++ < 3)
+    printf("%d ", i);
+```
+
+<QuizQuestion
+    question="Co wypisze powyższy kod?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: '0 1 2',
+            correct: false,
+            explanation:
+                'i++ zwraca starą wartość, ale zaraz potem i jest zwiększane – to miesza intuicję.',
+        },
+        {
+            id: 'b',
+            text: '1 2 3',
+            correct: true,
+            explanation:
+                'Iteracje: i startuje od 0. Po każdym sprawdzeniu warunku i jest zwiększane i wypisywane: 1, 2, 3.',
+        },
+        {
+            id: 'c',
+            text: '1 2 3 4',
+            correct: false,
+            explanation:
+                'Pętla wykona się dokładnie trzy razy, bo warunek i++ < 3 przestanie być spełniony.',
+        },
+        {
+            id: 'd',
+            text: 'Pętla jest nieskończona',
+            correct: false,
+        },
+    ]}
+/>
+
+---
+
+```c
+for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+        if (i == j) break;
+printf("Koniec\n");
+```
+
+<QuizQuestion
+    question="Co zrobi powyższy kod?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'Przerwie również zewnętrzną pętlę for',
+            correct: false,
+        },
+        {
+            id: 'b',
+            text: 'Wypisze „Koniec” dokładnie raz',
+            correct: true,
+            explanation:
+                'break przerywa tylko najbliższą pętlę (wewnętrzną). Po zakończeniu obu pętli printf wykona się raz.',
+        },
+        {
+            id: 'c',
+            text: 'Kod się nie skompiluje',
+            correct: false,
+        },
+    ]}
+/>
+
+---
+
+```c
+int x = 10;
+while (x = x - 3)
+    printf("%d ", x);
+```
+
+<QuizQuestion
+    question="Jak zachowa się ten kod?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'Pętla wykona się 3 razy',
+            correct: false,
+        },
+        {
+            id: 'b',
+            text: 'Pętla wykona się 4 razy',
+            correct: false,
+        },
+        {
+            id: 'c',
+            text: 'Pętla będzie się wykonywać dopóki x nie stanie się równe 0',
+            correct: true,
+            explanation:
+                'Warunek to przypisanie. Dopóki wynik (nowe x) jest różny od 0, warunek jest „prawdziwy”. Gdy x==0, pętla się kończy.',
+        },
+        {
+            id: 'd',
+            text: 'To jest błąd kompilacji, przypisania nie wolno używać w warunku',
+            correct: false,
+        },
+    ]}
+/>
+
+---
+
+```c
+int x;
+do {
+    printf("Podaj dodatnia liczbe: ");
+    scanf("%d", &x);
+} while (x <= 0);
+printf("Koniec: %d\n", x);
+```
+
+<QuizQuestion
+    question="Które stwierdzenie o powyższej pętli jest prawdziwe?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'Kod może zakończyć się bez żadnego wywołania scanf',
+            correct: false,
+        },
+        {
+            id: 'b',
+            text: 'Pętla wykona się co najmniej raz, niezależnie od wartości wpisanej przez użytkownika',
+            correct: true,
+            explanation:
+                'do/while zawsze wykona ciało przynajmniej raz, bo warunek jest testowany na końcu.',
+        },
+        {
+            id: 'c',
+            text: 'To zwykła pętla while z testem na początku',
+            correct: false,
+        },
+    ]}
+/>
+
+---
+
+```c
+for (int i = 0; ; ++i) {
+    if (i == 5)
+        continue;
+    if (i > 7)
+        break;
+    printf("%d ", i);
+}
+```
+
+<QuizQuestion
+    question="Co wypisze powyższy kod?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: '0 1 2 3 4 5 6 7',
+            correct: false,
+        },
+        {
+            id: 'b',
+            text: '0 1 2 3 4 6 7',
+            correct: true,
+            explanation:
+                'Gdy i==5, wykonywany jest continue i printf się nie wykona. Pętla kończy się, gdy i>7, czyli po wypisaniu 7.',
+        },
+        {
+            id: 'c',
+            text: 'Pętla jest nieskończona',
+            correct: false,
+        },
+    ]}
+/>
+
+---
+
+```c
+int i;
+for (i = 0; i < 10; )
+    ;   // pusty statement
+printf("%d\n", i);
+```
+
+<QuizQuestion
+    question="Co jest tutaj faktycznym problemem?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'Pusta instrukcja po for jest nielegalna w C',
+            correct: false,
+        },
+        {
+            id: 'b',
+            text: 'Pętla jest nieskończona, bo i nigdy nie jest modyfikowane',
+            correct: true,
+            explanation:
+                'Warunek i < 10 jest zawsze prawdziwy, a i się nie zmienia. Pętla kręci się w miejscu, printf nigdy nie dojdzie do głosu.',
+        },
+        {
+            id: 'c',
+            text: 'Kod się nie skompiluje z powodu błędnej składni',
+            correct: false,
+        },
+    ]}
+/>
+
+---
+
+```c
+int x = 1;
+while (x < 100)
+    x = x * x;
+printf("%d\n", x);
+```
+
+<QuizQuestion
+    question="Jak faktycznie zachowa się ten program?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'Wypisze 1 i zakończy się normalnie',
+            correct: false,
+        },
+        {
+            id: 'b',
+            text: 'Wypisze 100',
+            correct: false,
+        },
+        {
+            id: 'c',
+            text: 'Wejdzie w nieskończoną pętlę i nic nie wypisze',
+            correct: true,
+            explanation:
+                'x startuje od 1, a 1 * 1 = 1, więc x nigdy nie rośnie. Warunek x < 100 jest zawsze prawdziwy → pętla nieskończona, printf nigdy się nie wykona.',
+        },
+    ]}
+/>
+
+---
+
+```c
+for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
+        printf("%d ", i);
+```
+
+<QuizQuestion
+    question="Co wypisze ten kod (zakładając normalne wykonanie)?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: '0 1 2 0 1 2 0 1 2',
+            correct: true,
+            explanation:
+                'Wewnętrzne i zacienia zewnętrzne. Dla każdej iteracji zewnętrznej pętla wewnętrzna wypisuje 0 1 2.',
+        },
+        {
+            id: 'b',
+            text: '0 1 2',
+            correct: false,
+        },
+        {
+            id: 'c',
+            text: 'To jest niepoprawne w C — nie można używać tej samej nazwy zmiennej',
+            correct: false,
+        },
+    ]}
+/>
+
+---
+
+```c
+int i = 0;
+while (i < 10)
+    ;   // pusty statement
+printf("%d\n", i);
+```
+
+<QuizQuestion
+    question="Które stwierdzenie o tym kodzie jest prawdziwe?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'To poprawny kod, ale program wejdzie w nieskończoną pętlę i nic nie wypisze',
+            correct: true,
+            explanation:
+                'Warunek i < 10 jest zawsze prawdziwy, bo i nigdy się nie zmienia. Pusta instrukcja jako ciało pętli jest legalna, ale prowadzi do nieskończonej pętli.',
+        },
+        {
+            id: 'b',
+            text: 'Pusta instrukcja po while jest niedozwolona w C',
+            correct: false,
+        },
+        {
+            id: 'c',
+            text: 'Program wypisze 0',
+            correct: false,
+        },
+    ]}
+/>

@@ -1,113 +1,131 @@
+import QuizQuestion from '../../../components/QuizQuestion';
+
 # Wstęp do C
 
-W tym module nauczysz się tworzyć pierwszy program w języku C.
+W tym module nauczysz się tworzyć swój pierwszy program w języku C oraz
+wykonywać podstawowe operacje wejścia/wyjścia.
 
-## Schemat kodu
+---
+
+## Schemat minimalnego programu
 
 ```c
 #include <stdio.h>
 
-int main() {
+int main(void) {
     return 0;
 }
 ```
 
 > [!NOTE]
 >
-> **Definicje i informacje ze standardu C (C11/C17/C23):**
+> **Standard C (C11/C17/C23) o funkcji `main`:**
 >
-> * Każdy program w C musi posiadać funkcję `main`, która stanowi punkt wejściowy programu.
+> - Program _musi_ zawierać funkcję `main`.
+> - Dopuszczalne sygnatury:
 >
-> * Standard dopuszcza dwie poprawne sygnatury funkcji głównej:
+>     ```c
+>     int main(void);
+>     int main(int argc, char *argv[]);
+>     ```
 >
->   ```c
->   int main(void);
->   int main(int argc, char *argv[]);
->   ```
->
-> * Typ zwracany funkcji `main` **musi** być `int`. Inne typy są niezgodne ze standardem.
->
-> * Jeśli funkcja `main` zakończy się bez jawnego `return`, standard zakłada domyślny zwrot `0` (od C99).
->
-> * `#include <stdio.h>` dołącza standardową bibliotekę wejścia/wyjścia, która zawiera m.in. funkcje `printf`, `scanf`, `puts`, `getchar` itd.
-
-Na samej górze programu znajdują się importy, czyli biblioteki, które dołączamy do naszego programu:
-
-```c
-#include <stdio.h> // import standardowej biblioteki C
-```
-
-W dalszej części programu znajduje się funkcja główna `main()`, wymagana przez standard C.
-
-```c
-int main() {
-    return 0;
-}
-```
-
-Wartość zwracana przez funkcję `main` to **kod wyjściowy programu**:
-
-* `0` — zakończono pomyślnie,
-* `1` — wystąpił błąd (lub inny kod, zgodnie z konwencją programu).
+> - Typ zwracany musi być `int`.
+> - Od C99 pominięcie `return 0;` w `main` jest równoważne z `return 0;`.
 
 ---
 
-## Wypisywanie na ekranie
+## `#include` — dołączanie bibliotek
 
-Głównym sposobem przekazywania informacji do użytkownika jest komunikacja za pomocą terminala.
-Do wypisywania tekstu możemy użyć podstawowej funkcji dostępnej w bibliotece `<stdio.h>` — `puts()`.
+Biblioteki umieszcza się na samej górze pliku źródłowego:
 
-Funkcja `puts()` przyjmuje **ciąg znaków** (napis) i wypisuje go na ekranie, automatycznie dodając znak nowej linii na końcu.
+```c
+#include <stdio.h>  // biblioteka standardowego wejścia/wyjścia
+```
+
+`<stdio.h>` zawiera m.in.:
+
+- `printf`
+- `scanf`
+- `puts`
+- `getchar`
+- `putchar`
+
+---
+
+## Funkcja `main`
+
+To funkcja startowa programu:
+
+```c
+int main(void) {
+    return 0;  // kod zakończenia programu
+}
+```
+
+Kody wyjścia:
+
+- `0` → sukces
+- `1` i inne → błąd
+
+---
+
+## Wypisywanie na ekran — `puts()` i `printf()`
+
+### `puts()` — najprostsza forma wypisywania tekstu
+
+Dodaje automatycznie nową linię:
 
 ```c
 #include <stdio.h>
 
-int main() {
+int main(void) {
     puts("hello world");
 }
 ```
 
-Inną, bardziej zaawansowaną funkcją do wypisywania jest `printf()`, również dostępna w bibliotece `<stdio.h>`.
-Daje nam ona możliwość **wstrzykiwania wartości zmiennych różnych typów bezpośrednio do tekstu**.
+---
 
-Działa to dzięki tzw. **format string** (fstring) — czyli zwykłemu napisowi, w którym umieszczamy **specyfikatory formatu**, np. `%d`, `%f`, `%s`.
+### `printf()` — wypisywanie formatowane
 
-### Najczęściej używane specyfikatory formatu
+Pozwala wstrzykiwać wartości do tekstu.
 
-* `%d` — liczba całkowita (int)
-* `%i` — liczba całkowita (jak `%d`)
-* `%f` — liczba zmiennoprzecinkowa (float/double)
-* `%.2f` — liczba zmiennoprzecinkowa zaokrąglona do 2 miejsc po przecinku
-* `%c` — pojedynczy znak
-* `%s` — ciąg znaków (string)
-* `%u` — liczba bez znaku (unsigned int)
-* `%ld` — długa liczba całkowita (long)
-* `%p` — adres w pamięci (wskaźnik)
+```c
+printf("Wiek: %d\n", wiek);
+```
+
+### Najważniejsze specyfikatory formatu
+
+- `%d` — liczba całkowita (`int`)
+- `%i` — liczba całkowita (dziesiętna / ósemkowa / hex)
+- `%f` — liczba zmiennoprzecinkowa (`float`/`double`)
+- `%.2f` — liczba z dwoma miejscami po przecinku
+- `%c` — znak
+- `%s` — napis
+- `%u` — liczba bez znaku
+- `%ld` — `long int`
+- `%p` — adres (wskaźnik)
 
 > [!NOTE]
 >
-> **Standard C11/C17/C23:**
+> **Standard C:**
 >
-> * `printf()` jest częścią `<stdio.h>` i jedną z najważniejszych funkcji standardu.
+> - prototyp:
 >
-> * Prototyp funkcji:
+>     ```c
+>     int printf(const char *restrict format, ...);
+>     ```
 >
->   ```c
->   int printf(const char *restrict format, ...);
->   ```
->
-> * Na końcu, w przeciwieństwie do `puts()`, nie wstawia znaku końca linii `\n`.
->
-> * Zwraca liczbę wypisanych znaków (lub wartość ujemną, jeśli wystąpił błąd).
->
-> * Format string jest analizowany przez funkcję — każdy `%` oznacza miejsce, w które zostanie wstawiona wartość podana w dalszych argumentach.
+> - nie dodaje `\n`,
+> - zwraca liczbę wypisanych znaków.
 
-### Przykład użycia
+---
+
+### Przykład:
 
 ```c
 #include <stdio.h>
 
-int main() {
+int main(void) {
     int wiek = 20;
     float wzrost = 1.82;
     char inicjal = 'A';
@@ -117,106 +135,213 @@ int main() {
     printf("Inicjał: %c\n", inicjal);
     printf("Wiek: %d lat\n", wiek);
     printf("Wzrost: %.2f m\n", wzrost);
-
-    return 0;
 }
 ```
 
-> [!TIP]
->
-> Jeżeli na razie nie wiesz, czym są zmienne — nie martw się, omówimy to dokładnie później.
+---
 
-## Zmienne
+## Wczytywanie danych — `scanf()`
 
-Zmienne możemy porównać do takich „przestrzeni” w pamięci komputera, gdzie program przechowuje określone wartości.
+`scanf()` służy do pobierania danych z klawiatury według specyfikatora formatu.
 
-### Typy zmiennych
+### Podstawowy przykład
 
-W języku C mamy kilka podstawowych typów:
+```c
+#include <stdio.h>
 
-- `int` — liczby całkowite
-- `float` — liczby zmiennoprzecinkowe (pojedyncza precyzja)
-- `double` — liczby zmiennoprzecinkowe (podwójna precyzja)
-- `char` — pojedynczy znak
-- `long` / `short` — odmiany typu całkowitego o różnych rozmiarach
-- `unsigned` — odmiany bez znaku (np. `unsigned int`)
-- `_Bool` — typ logiczny (`0` lub `1`)
+int main(void) {
+    int wiek;
+
+    printf("Podaj wiek: ");
+    scanf("%d", &wiek);  // UWAGA — & !!!!!
+
+    printf("Masz %d lat\n", wiek);
+}
+```
+
+### Dlaczego `&`?
+
+- `scanf()` musi dostać **adres**, aby zmodyfikować zmienną.
+- Wyjątek: napisy (`char[]`) — tablica _jest_ adresem.
+
+---
+
+## Specyfikatory formatu w `scanf`
+
+- `%d` → `int`
+- `%f` → `float`
+- `%lf` → `double`
+- `%c` → znak
+- `%s` → napis (bez &)
+- `%u` → `unsigned int`
+- `%ld` → `long`
+- `%x` → liczba szesnastkowa
 
 > [!NOTE]
 >
-> Rozmiary typów **nie są sztywno ustalone w standardzie C**, ponieważ zależą od architektury komputera i kompilatora.
-> Standard definiuje jedynie minimalne rozmiary i relacje między typami:
-> - `char` — zawsze **1 bajt**
-> - `short` — ≥ 2 bajty
-> - `int` — ≥ 2 bajty (zwykle 4 bajty)
-> - `long` — ≥ 4 bajty
-> - `long long` — ≥ 8 bajtów
-> - `float` — zwykle 4 bajty
-> - `double` — zwykle 8 bajtów
-> - `long double` — 8, 12 lub 16 bajtów (zależnie od kompilatora)
+> **Standard C a `scanf()`:**
+>
+> - prototyp:
+>
+>     ```c
+>     int scanf(const char *restrict format, ...);
+>     ```
+>
+> - zwraca liczbę poprawnie wczytanych argumentów,
+> - w razie błędu zwraca wartość mniejszą od oczekiwanej,
+> - przy końcu danych — `EOF`.
 
+---
 
-### Przykłady użycia
-
-Poniżej znajdziesz krótkie, minimalne przykłady tworzenia i używania zmiennych każdego podstawowego typu w C.
-
-#### `int` — liczba całkowita
-```c
-int liczba = 10;
-printf("%d\n", liczba);
-````
-
-#### `float` — liczba zmiennoprzecinkowa
+## Przykład z wieloma wartościami
 
 ```c
-float temperatura = 23.5f;
-printf("%f\n", temperatura);
+int a, b;
+printf("Podaj dwie liczby: ");
+scanf("%d %d", &a, &b);
+printf("Suma: %d\n", a + b);
 ```
 
-#### `double` — liczba zmiennoprzecinkowa o większej precyzji
+---
+
+## Wczytywanie napisów
 
 ```c
-double pi = 3.14159;
-printf("%lf\n", pi);
+char imie[20];
+
+printf("Podaj imię: ");
+scanf("%19s", imie); // limitowanie długości — BEZPIECZNIE!
+
+printf("Witaj, %s!\n", imie);
 ```
 
-#### `char` — znak
+> [!NOTE]
+>
+> `"%19s"` oznacza: maksymalnie 19 znaków + `'\0'`.
+
+---
+
+## Typowy błąd początkujących
 
 ```c
-char litera = 'A';
-printf("%c\n", litera);
+scanf("%d", wiek);   // ❌ brak &
 ```
 
-#### `unsigned int` — liczba bez znaku
+prowadzi do _nieprzewidywalnych skutków_ (zwykle segfault).
+
+---
+
+## Zadania — sprawdź się
+
+<QuizQuestion
+    question="Które deklaracje funkcji main są poprawne według standardu C?"
+    multiple={true}
+    options={[
+        { id: 'a', text: 'void main()', correct: false },
+        { id: 'b', text: 'int main(void)', correct: true },
+        { id: 'c', text: 'main()', correct: false },
+        {
+            id: 'd',
+            text: 'int main()',
+            correct: true,
+            explanation:
+                'int main() jest równoważne z int main(void) — poprawne.',
+        },
+    ]}
+/>
+
+<QuizQuestion
+    question="Co oznacza return 0 w funkcji main?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'Program zakończył się powodzeniem', correct: true },
+        { id: 'b', text: 'Wystąpił błąd', correct: false },
+        { id: 'c', text: 'Program nie został uruchomiony', correct: false },
+        {
+            id: 'd',
+            text: 'Brak znaczenia — wartość jest ignorowana',
+            correct: false,
+        },
+    ]}
+/>
+
+<QuizQuestion
+    question="Które funkcje pochodzą z <stdio.h>?"
+    multiple={true}
+    options={[
+        { id: 'a', text: 'printf', correct: true },
+        { id: 'b', text: 'scanf', correct: true },
+        { id: 'c', text: 'puts', correct: true },
+        { id: 'd', text: 'main', correct: false },
+    ]}
+/>
+
+---
 
 ```c
-unsigned int punkty = 150;
-printf("%u\n", punkty);
+int x; scanf("%d", ???);
 ```
 
-#### `long` — większa liczba całkowita
+<QuizQuestion
+    question="Wskaż poprawne użycie scanf"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'x', correct: false },
+        {
+            id: 'b',
+            text: '&x',
+            correct: true,
+            explanation: 'scanf potrzebuje adresu zmiennej.',
+        },
+        { id: 'c', text: '*x', correct: false },
+        { id: 'd', text: '&*x', correct: false },
+    ]}
+/>
+
+---
 
 ```c
-long populacja = 7800000000;
-printf("%ld\n", populacja);
+char buf[10];
+scanf("%s", buf);
 ```
 
-#### `_Bool` — wartość logiczna
+<QuizQuestion
+    question="Dlaczego to jest niebezpieczne?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'Bo %s może przepełnić bufor', correct: true },
+        { id: 'b', text: 'Bo buf nie istnieje', correct: false },
+        { id: 'c', text: 'Bo %s wczytuje tylko cyfry', correct: false },
+        { id: 'd', text: 'Bo scanf nie działa z tablicami', correct: false },
+    ]}
+
+/>
+
+<br />
 
 ```c
-_Bool aktywny = 1;
-printf("%d\n", aktywny);
+#include <stdio.h>
+
+int main(void) {
+    puts("hello world");
+}
 ```
 
-### Sprawdzanie wielkości zmiennej
-
-W języku C do sprawdzania, ile bajtów zajmuje zmienna lub typ, używamy operatora `sizeof`.
-
-```c
-int a = 1231;
-printf("%d\n", sizeof(a));     // rozmiar zmiennej
-printf("%d\n", sizeof(int));   // rozmiar typu
-````
-
-Operator `sizeof` zwraca liczbę bajtów potrzebnych na przechowanie danej wartości.
-
+<QuizQuestion
+    question="Co zrobi powyższy program?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'Wypisze hello world i doda nową linię',
+            correct: true,
+        },
+        {
+            id: 'b',
+            text: 'Wypisze hello world bez nowej linii',
+            correct: false,
+        },
+        { id: 'c', text: 'Nic nie wypisze', correct: false },
+        { id: 'd', text: 'Nie skompiluje się', correct: false },
+    ]}
+/>

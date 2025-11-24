@@ -13,8 +13,10 @@
     "next": "16.0.3",
     "nextra": "^4.6.0",
     "nextra-theme-docs": "^4.6.0",
+    "prismjs": "^1.30.0",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "react-simple-code-editor": "^0.14.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

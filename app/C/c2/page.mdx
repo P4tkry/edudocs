@@ -1,29 +1,279 @@
-# Wskaźniki
+import QuizQuestion from '../../../components/QuizQuestion';
 
-Wskaźniki to jeden z najważniejszych elementów języka C.  
-Możesz myśleć o nich jak o **zmiennych, które przechowują adres innej zmiennej**, a nie jej wartość.
+# Zmienne
 
-Każda zmienna w programie znajduje się w określonym miejscu w pamięci komputera — ma swój **adres**.  
-Wskaźnik pozwala ten adres zapisać i później go wykorzystać.
+Zmienne możemy porównać do „pudełek” w pamięci komputera — każde pudełko ma
+konkretny **typ**, **rozmiar**, **nazwę** oraz **wartość**, którą można
+odczytywać i zmieniać podczas działania programu.
 
-### Kluczowe cechy wskaźników:
+Zmienne są absolutną podstawą wszystkich programów — przechowują dane, na
+których program wykonuje operacje.
 
-- Wskaźnik przechowuje **adres** wartości, a nie samą wartość.  
-- Typ wskaźnika mówi, **na jaki typ danych wskazuje**, np.  
-  - `int *` → wskaźnik na `int`  
-  - `char *` → wskaźnik na `char`  
-- Operator `&` pobiera adres zmiennej.  
-- Operator `*` pozwala odczytać lub zmienić wartość, na którą wskaźnik wskazuje (**dereferencja**).
+---
 
-### Najprostszy przykład
+## Typy zmiennych
+
+W języku C każda zmienna musi mieć **określony typ**, który definiuje:
+
+- **jakie wartości** może przechowywać,
+- **ile bajtów** zajmuje w pamięci,
+- **jak ją interpretować** (np. jako liczbę całkowitą, znak, liczbę
+  zmiennoprzecinkową itd.).
+
+Najpopularniejsze typy:
+
+- `int` — liczby całkowite
+- `float` — liczby zmiennoprzecinkowe (pojedyncza precyzja)
+- `double` — liczby zmiennoprzecinkowe (podwójna precyzja)
+- `char` — pojedynczy znak
+- `short` / `long` — warianty liczb całkowitych o różnej długości
+- `unsigned` — odmiany bez znaku (np. `unsigned int`)
+- `_Bool` — wartość logiczna (`0` lub `1`)
+
+> [!NOTE]
+>
+> **Standard C nie narzuca stałych rozmiarów typów**, ale określa _minimalne_:
+>
+> - `char` — **zawsze 1 bajt**
+> - `short` — ≥ 2 bajty
+> - `int` — ≥ 2 bajty
+> - `long` — ≥ 4 bajty
+> - `long long` — ≥ 8 bajtów
+> - `float` — zwykle 4 bajty
+> - `double` — zwykle 8 bajtów
+> - `long double` — 8, 12 lub 16 bajtów (w zależności od kompilatora)
+
+---
+
+## 🔥 WAŻNE: Relacje rozmiarów typów w C
+
+Standard C **nie gwarantuje konkretnych rozmiarów** (`int` nie musi mieć 4
+bajtów!), ale wymaga zachowania następującej relacji:
+
+```
+
+sizeof(char) <= sizeof(short) <= sizeof(int) <= sizeof(long) <= sizeof(long long)
+
+```
+
+To jedyna pewna rzecz dotycząca rozmiarów typów całkowitych.
+
+### Co z tego wynika?
+
+- `long` **może być większy** niż `int`,
+- `long` **może być taki sam** jak `int`,
+- `long` **nigdy nie może być mniejszy** niż `int`,
+- `int` nie ma gwarancji rozmiaru 4 bajtów.
+
+---
+
+## Modele architektury (bardzo ważne w C)
+
+W zależności od systemu i kompilatora typy mogą mieć różne rozmiary.
+
+### **ILP32** — klasyczne 32-bit (Linux 32-bit, Windows 32-bit)
+
+| Typ       | Rozmiar |
+| --------- | ------- |
+| int       | 4 B     |
+| long      | 4 B     |
+| long long | 8 B     |
+| wskaźnik  | 4 B     |
+
+👉 `long == int`
+
+---
+
+### **LP64** — Linux 64-bit, macOS 64-bit
+
+| Typ       | Rozmiar |
+| --------- | ------- |
+| int       | 4 B     |
+| long      | 8 B     |
+| long long | 8 B     |
+| wskaźnik  | 8 B     |
+
+👉 `long` **większy** od `int`
+
+---
+
+### **LLP64** — Windows 64-bit
+
+| Typ       | Rozmiar |
+| --------- | ------- |
+| int       | 4 B     |
+| long      | 4 B     |
+| long long | 8 B     |
+| wskaźnik  | 8 B     |
+
+👉 `long == int` nawet na 64-bitowym Windowsie
+
+> [!NOTE]
+>
+> To, że system jest 64-bitowy, **nie oznacza**, że `long` będzie 64-bitowy. W
+> Windows 64-bit — _nie jest_.
+
+---
+
+## Pojedyncza i podwójna precyzja — float vs double
+
+### **`float` — pojedyncza precyzja**
+
+- zwykle 4 bajty
+- ok. 6–7 cyfr precyzji
+- literał `3.14f`
+
+### **`double` — podwójna precyzja**
+
+- zwykle 8 bajtów
+- 15–16 cyfr precyzji
+- domyślny typ dla liczb zmiennoprzecinkowych
+
+---
+
+## Przykładowe deklaracje
+
+### `int`
 
 ```c
-int x = 10;
-int *ptr = &x;   // ptr przechowuje adres zmiennej x
+int liczba = 10;
+printf("%d\n", liczba);
+```
 
-printf("%d\n", x);     // wartość zmiennej
-printf("%p\n", ptr);   // adres zmiennej
-printf("%d\n", *ptr);  // dereferencja — wartość znajdująca się pod adresem
-````
+### `float`
 
-Wskaźniki dają dużą kontrolę nad pamięcią, dlatego są kluczowe m.in. przy tablicach, funkcjach, dynamicznej pamięci i strukturach danych.
+```c
+float temperatura = 23.5f;
+printf("%f\n", temperatura);
+```
+
+### `double`
+
+```c
+double pi = 3.14159;
+printf("%lf\n", pi);
+```
+
+### `char`
+
+```c
+char litera = 'A';
+printf("%c\n", litera);
+```
+
+### `unsigned int`
+
+```c
+unsigned int punkty = 150;
+printf("%u\n", punkty);
+```
+
+### `long`
+
+```c
+long populacja = 7800000000;
+printf("%ld\n", populacja);
+```
+
+### `_Bool`
+
+```c
+_Bool aktywny = 1;
+printf("%d\n", aktywny);
+```
+
+---
+
+## Operator `sizeof`
+
+```c
+int a = 1231;
+printf("%d\n", sizeof(a));     // rozmiar zmiennej
+printf("%d\n", sizeof(int));   // rozmiar typu
+```
+
+---
+
+# 🔍 Quiz — sprawdź się
+
+<QuizQuestion
+    question="Który z poniższych typów przechowuje pojedynczy znak?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'int', correct: false },
+        { id: 'b', text: 'char', correct: true },
+        { id: 'c', text: 'float', correct: false },
+        { id: 'd', text: 'double', correct: false },
+    ]}
+/>
+
+<QuizQuestion
+    question="Które typy są typami całkowitymi?"
+    multiple={true}
+    options={[
+        { id: 'a', text: 'int', correct: true },
+        { id: 'b', text: 'short', correct: true },
+        { id: 'c', text: 'double', correct: false },
+        { id: 'd', text: 'long', correct: true },
+    ]}
+/>
+
+<QuizQuestion
+    question="Dlaczego unsigned int nie może przechowywać wartości ujemnych?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'Bo ma mniejszy rozmiar', correct: false },
+        {
+            id: 'b',
+            text: 'Bo usuwa bit znaku i reprezentuje tylko wartości dodatnie',
+            correct: true,
+        },
+        { id: 'c', text: 'Bo kompilator zabrania', correct: false },
+        { id: 'd', text: 'Bo zawsze ma 8 bajtów', correct: false },
+    ]}
+/>
+
+<QuizQuestion
+    question="Które gwarancje dotyczą operatora sizeof?"
+    multiple={true}
+    options={[
+        { id: 'a', text: 'sizeof(char) zawsze == 1', correct: true },
+        { id: 'b', text: 'sizeof(double) >= sizeof(float)', correct: true },
+        { id: 'c', text: 'sizeof(int) zawsze == 4', correct: false },
+        { id: 'd', text: 'sizeof(long) zawsze == 8', correct: false },
+    ]}
+/>
+
+<QuizQuestion
+    question="Które stwierdzenie jest prawdziwe?"
+    multiple={true}
+    options={[
+        {
+            id: 'a',
+            text: 'long może mieć tyle samo bajtów co int',
+            correct: true,
+        },
+        { id: 'b', text: 'long zawsze jest większy niż int', correct: false },
+        { id: 'c', text: 'char zawsze ma 1 bajt', correct: true },
+        {
+            id: 'd',
+            text: 'Rozmiar int jest gwarantowany przez standard',
+            correct: false,
+        },
+    ]}
+/>
+
+<QuizQuestion
+    question="Dlaczego poprawna deklaracja float to float x = 3.14f;?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'Bo 3.14 to domyślnie double', correct: true },
+        {
+            id: 'b',
+            text: 'Bo float nie może przechowywać ułamków',
+            correct: false,
+        },
+        { id: 'c', text: 'Bo kompilator wymaga literału f', correct: false },
+        { id: 'd', text: 'Bo double jest zabronione w C', correct: false },
+    ]}
+/>
