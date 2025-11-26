@@ -2,14 +2,15 @@ import QuizQuestion from '../../../components/QuizQuestion';
 
 # Tablice w języku C
 
-Tablica to **ciąg elementów tego samego typu ułożonych w pamięci kolejno, bez przerw**.
-Elementy tablicy mają:
+Tablica to **ciąg elementów tego samego typu ułożonych w pamięci kolejno, bez
+przerw**. Elementy tablicy mają:
 
 - **wspólną nazwę**,
 - **ten sam typ**,
 - są dostępne przez **indeks**, zaczynający się od **0**.
 
-Tablice są fundamentem pracy w C — są szybkie, przewidywalne i bardzo niskopoziomowe.
+Tablice są fundamentem pracy w C — są szybkie, przewidywalne i bardzo
+niskopoziomowe.
 
 ---
 
@@ -17,7 +18,7 @@ Tablice są fundamentem pracy w C — są szybkie, przewidywalne i bardzo niskop
 
 ```c
 typ nazwa[ROZMIAR];
-````
+```
 
 ### Przykład: tablica liczb całkowitych
 
@@ -27,9 +28,9 @@ int liczby[5];
 
 To oznacza:
 
-* w pamięci powstaje 5 kolejnych `int`,
-* dostęp do elementów: `liczby[0]`, ..., `liczby[4]`,
-* indeks **zawsze zaczyna się od 0**, nie od 1.
+- w pamięci powstaje 5 kolejnych `int`,
+- dostęp do elementów: `liczby[0]`, ..., `liczby[4]`,
+- indeks **zawsze zaczyna się od 0**, nie od 1.
 
 ---
 
@@ -66,8 +67,8 @@ tab[3] = 99;      // zmiana wartości
 
 > [!NOTE]
 >
-> **Standard C nie sprawdza indeksów tablicy.**
-> `tab[9999] = 7;` *skompiluje się*, ale prowadzi do nadpisania pamięci → błąd krytyczny.
+> **Standard C nie sprawdza indeksów tablicy.** `tab[9999] = 7;` _skompiluje
+> się_, ale prowadzi do nadpisania pamięci → błąd krytyczny.
 
 ---
 
@@ -90,13 +91,14 @@ int roz = sizeof(t) / sizeof(t[0]);
 
 > [!NOTE]
 >
-> `sizeof(t)` → liczba **bajtów całej tablicy**
-> `sizeof(t[0])` → liczba **bajtów pojedynczego elementu**
+> `sizeof(t)` → liczba **bajtów całej tablicy** `sizeof(t[0])` → liczba **bajtów
+> pojedynczego elementu**
 >
-> Dzieląc te wartości dostajemy **liczbę elementów tablicy**, niezależnie od typu i rozmiaru elementu.
+> Dzieląc te wartości dostajemy **liczbę elementów tablicy**, niezależnie od
+> typu i rozmiaru elementu.
 >
-> To działa jedynie dla **tablic statycznych (lokalnych/globalnych)**.
-> Dla wskaźników nie działa — o tym w dziale o wskaźnikach.
+> To działa jedynie dla **tablic statycznych (lokalnych/globalnych)**. Dla
+> wskaźników nie działa — o tym w dziale o wskaźnikach.
 
 ---
 
@@ -153,8 +155,8 @@ printf("%d\n", mat[1][2]);  // 6
 
 ## Tablica 2D jako pamięć ciągła — o co chodzi?
 
-Tablica 2D jest fizycznie **jednym dużym blokiem pamięci**.
-C nie tworzy tablic tablic — tworzy **ciąg liczb**, ale interpretuje go jak macierz.
+Tablica 2D jest fizycznie **jednym dużym blokiem pamięci**. C nie tworzy tablic
+tablic — tworzy **ciąg liczb**, ale interpretuje go jak macierz.
 
 ### Wizualizacja:
 
@@ -175,14 +177,15 @@ W pamięci:
 
 ### Co to daje?
 
-* szybki dostęp do elementów,
-* możliwość „ręcznego” obliczania indeksów:
+- szybki dostęp do elementów,
+- możliwość „ręcznego” obliczania indeksów:
 
 ```c
 m[i][j]  ≡  *(&m[0][0] + i * LICZBA_KOLUMN + j)
 ```
 
-Ale **nie rób tego na początku nauki** — to przyda się w optymalizacji i programowaniu niskopoziomowym.
+Ale **nie rób tego na początku nauki** — to przyda się w optymalizacji i
+programowaniu niskopoziomowym.
 
 ---
 
@@ -190,20 +193,20 @@ Ale **nie rób tego na początku nauki** — to przyda się w optymalizacji i pr
 
 To jeden z najważniejszych tematów w całym C.
 
-* **Tablica `char` to nie zawsze napis.**
-* Ale **napis zawsze jest tablicą `char` zakończoną `'\0'`**.
+- **Tablica `char` to nie zawsze napis.**
+- Ale **napis zawsze jest tablicą `char` zakończoną `'\0'`**.
 
 ---
 
 ## Napisy w C — jak działają?
 
-W C **nie ma typu `string`**.
-Napis to **ciąg znaków zakończony null-terminatorem `'\0'`**.
+W C **nie ma typu `string`**. Napis to **ciąg znaków zakończony
+null-terminatorem `'\0'`**.
 
 ### Różnica między `'a'` a `"a"`:
 
-* `'a'` → **pojedynczy znak** (`char`)
-* `"a"` → **napis** (`char[2]` → `'a'`, `'\0'`)
+- `'a'` → **pojedynczy znak** (`char`)
+- `"a"` → **napis** (`char[2]` → `'a'`, `'\0'`)
 
 > [!NOTE]
 >
@@ -213,8 +216,8 @@ Napis to **ciąg znaków zakończony null-terminatorem `'\0'`**.
 > "Ala"
 > ```
 >
-> automatycznie dodaje **`'\0'` na końcu**.
-> To zachowanie jest gwarantowane przez standard C.
+> automatycznie dodaje **`'\0'` na końcu**. To zachowanie jest gwarantowane
+> przez standard C.
 
 ### Przykład
 
@@ -282,8 +285,8 @@ fgets(buf, sizeof(buf), stdin);
 
 > [!NOTE]
 >
-> `fgets()` wczytuje max `sizeof(buf) - 1` znaków
-> i **zawsze** terminator `'\0'`.
+> `fgets()` wczytuje max `sizeof(buf) - 1` znaków i **zawsze** terminator
+> `'\0'`.
 
 ---
 
@@ -317,56 +320,69 @@ Więcej o tym w dziale o wskaźnikach.
 # Quiz — tablice i napisy
 
 <QuizQuestion
-  question="Które zdanie o tablicach w C jest prawdziwe?"
-  multiple={false}
-  options={[
-    { id: 'a', text: 'Indeksowanie zaczyna się od 1', correct: false },
-    { id: 'b', text: 'Tablica jest ciągłym blokiem pamięci', correct: true },
-    { id: 'c', text: 'Tablice mają dynamiczny rozmiar', correct: false },
-    { id: 'd', text: 'C sprawdza poprawność indeksów tablicy', correct: false },
-  ]}
+    question="Które zdanie o tablicach w C jest prawdziwe?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'Indeksowanie zaczyna się od 1', correct: false },
+        {
+            id: 'b',
+            text: 'Tablica jest ciągłym blokiem pamięci',
+            correct: true,
+        },
+        { id: 'c', text: 'Tablice mają dynamiczny rozmiar', correct: false },
+        {
+            id: 'd',
+            text: 'C sprawdza poprawność indeksów tablicy',
+            correct: false,
+        },
+    ]}
 />
 
 <QuizQuestion
-  question="Ile bajtów musi mieć tablica, która ma przechować 12 znaków napisu?"
-  multiple={false}
-  options={[
-    { id: 'a', text: '12', correct: false },
-    { id: 'b', text: '13', correct: true, explanation: 'Musi zmieścić 12 znaków + terminator \\0.' },
-    { id: 'c', text: '11', correct: false },
-    { id: 'd', text: '24', correct: false },
-  ]}
+    question="Ile bajtów musi mieć tablica, która ma przechować 12 znaków napisu?"
+    multiple={false}
+    options={[
+        { id: 'a', text: '12', correct: false },
+        {
+            id: 'b',
+            text: '13',
+            correct: true,
+            explanation: 'Musi zmieścić 12 znaków + terminator \\0.',
+        },
+        { id: 'c', text: '11', correct: false },
+        { id: 'd', text: '24', correct: false },
+    ]}
 />
 
 <QuizQuestion
-  question='Co przedstawia literał "Kot"?'
-  multiple={false}
-  options={[
-    { id: 'a', text: 'Pojedynczy znak', correct: false },
-    { id: 'b', text: 'Napis zakończony \\0', correct: true },
-    { id: 'c', text: 'Adres funkcji', correct: false },
-    { id: 'd', text: 'Niepoprawną konstrukcję', correct: false },
-  ]}
+    question='Co przedstawia literał "Kot"?'
+    multiple={false}
+    options={[
+        { id: 'a', text: 'Pojedynczy znak', correct: false },
+        { id: 'b', text: 'Napis zakończony \\0', correct: true },
+        { id: 'c', text: 'Adres funkcji', correct: false },
+        { id: 'd', text: 'Niepoprawną konstrukcję', correct: false },
+    ]}
 />
 
 <QuizQuestion
-  question="Która forma wczytywania napisów jest najbezpieczniejsza?"
-  multiple={false}
-  options={[
-    { id: 'a', text: 'scanf("%s", buf)', correct: false },
-    { id: 'b', text: 'scanf("%19s", buf)', correct: false },
-    { id: 'c', text: 'fgets(buf, sizeof(buf), stdin)', correct: true },
-    { id: 'd', text: 'gets(buf)', correct: false },
-  ]}
+    question="Która forma wczytywania napisów jest najbezpieczniejsza?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'scanf("%s", buf)', correct: false },
+        { id: 'b', text: 'scanf("%19s", buf)', correct: false },
+        { id: 'c', text: 'fgets(buf, sizeof(buf), stdin)', correct: true },
+        { id: 'd', text: 'gets(buf)', correct: false },
+    ]}
 />
 
 <QuizQuestion
-  question="Jak wygląda napis 'Ala' w pamięci?"
-  multiple={false}
-  options={[
-    { id: 'a', text: "A l a", correct: false },
-    { id: 'b', text: "A l a \\0", correct: true },
-    { id: 'c', text: "\\0 A l a", correct: false },
-    { id: 'd', text: "A l a ?", correct: false },
-  ]}
+    question="Jak wygląda napis 'Ala' w pamięci?"
+    multiple={false}
+    options={[
+        { id: 'a', text: 'A l a', correct: false },
+        { id: 'b', text: 'A l a \\0', correct: true },
+        { id: 'c', text: '\\0 A l a', correct: false },
+        { id: 'd', text: 'A l a ?', correct: false },
+    ]}
 />
