@@ -1,249 +1,424 @@
-# Wskaźniki
+import QuizQuestion from '../../../components/QuizQuestion';
 
-Wskaźniki to jeden z najważniejszych i najbardziej charakterystycznych elementów
-języka C. Najprościej mówiąc: **wskaźnik to zmienna, która przechowuje adres
-innej zmiennej**, a nie jej wartość.
+# Instrukcje warunkowe
 
-Każda zmienna w programie ma swoje miejsce w pamięci — **adres**. Wskaźniki
-pozwalają ten adres zapisać, przekazać i używać do odczytu/modyfikacji danych.
+## Wprowadzenie
 
----
+Instrukcje warunkowe pozwalają wykonywać **różne fragmenty programu** w
+zależności od spełnienia określonych warunków. Dzięki nim program może
+podejmować decyzje — reagować na dane, wyniki obliczeń czy działania
+użytkownika.
 
-## Kluczowe informacje o wskaźnikach
+W języku C mamy kilka sposobów podejmowania decyzji:
 
-- Wskaźnik przechowuje **adres**, nie wartość.
-- Typ wskaźnika określa, **na jaki typ danych wskazuje**, np.
-
-- `int *` → wskaźnik na `int`
-- `char *` → wskaźnik na `char`
-- Operator `&` pobiera **adres** zmiennej.
-- Operator `*` wykonuje **dereferencję**, czyli odczyt lub zapis wartości
-  znajdującej się pod danym adresem.
+- `if`
+- `else`
+- `else if`
+- operator trójargumentowy `?:`
+- `switch` (rozgałęzienia wielokrotne)
 
 ---
 
-## Najprostszy przykład
+## Jak działają warunki?
 
-```c
-int x = 10;
-int *ptr = &x;   // ptr przechowuje adres zmiennej x
+Warunek to wyrażenie, które **zwraca wartość logiczną**:
 
-printf("%d\n", x);     // wartość zmiennej
-printf("%p\n", ptr);   // adres zmiennej x
-printf("%d\n", *ptr);  // dereferencja — wartość pod adresem
-```
+- `0` → **fałsz**
+- dowolna wartość **niezerowa** → **prawda**
 
 ---
 
-## Wyjaśnienie „po ludzku”
+## `if` — podstawowa instrukcja warunkowa
 
-Zmienna:
-
-```c
-int x = 10;
-```
-
-ma swój adres w pamięci, np.:
-
-```
-0x7ffc12a4b9c8
-```
-
-Jeśli chcemy go pobrać:
+Instrukcja `if` wykonuje blok kodu **tylko wtedy**, gdy warunek jest prawdziwy.
 
 ```c
-printf("%p\n", &x);
-```
-
-Ten adres możemy zapisać w zmiennej typu _wskaźnik_:
-
-```c
-int *ptr = &x;
-```
-
-W tym momencie:
-
-- `ptr` to adres `x`
-- `*ptr` to wartość **x**
-
----
-
-## Dereferencja – odczyt i zapis
-
-```c
-int x = 10;
-int *ptr = &x;
-
-printf("%d", *ptr); // 10
-
-*ptr = 20;          // zmienia wartość x!
-printf("%d", x);    // 20
-```
-
-### Uwaga na dwuznaczność `*`
-
-- **w deklaracji**: `int *ptr` → tworzymy wskaźnik
-- **poza deklaracją**: `*ptr` → dereferencja
-
----
-
-# 📌 Przekazywanie danych przez wskaźniki do funkcji
-
-To kluczowe zastosowanie wskaźników.
-
-### Zwykłe przekazywanie (przez wartość):
-
-```c
-void fun(int x) { x = 5; }
-```
-
-Zmiana dotyczy tylko kopii — oryginalna zmienna się nie zmienia.
-
-### Przekazywanie przez adres:
-
-```c
-void ustawNa5(int *wsk) {
-    *wsk = 5;
-}
-
-int main() {
-    int x = 10;
-    ustawNa5(&x);
-    printf("%d", x); // 5
+if (warunek) {
+    // kod
 }
 ```
 
-Teraz funkcja **zmieniła oryginalną zmienną**, bo dostała jej adres.
-
 ---
 
-# 📌 Wskaźniki a tablice
-
-W C nazwa tablicy to **stały wskaźnik** do pierwszego elementu.
+### `else` — kod wykonywany przy fałszu
 
 ```c
-int tab[5] = {1, 2, 3, 4, 5};
-int *p = tab;   // to samo co &tab[0]
-```
-
-Możemy dereferencjonować tablicę jak wskaźnik:
-
-```c
-printf("%d", *tab);     // 1
-printf("%d", *(tab+1)); // 2
-printf("%d", tab[1]);   // 2
-```
-
-Tablica i wskaźnik nie są identyczne, ale często działają podobnie.
-
----
-
-# 🔥 **Przesuwanie wskaźników (pointer arithmetic)**
-
-To jedna z najpotężniejszych i najbardziej nieoczywistych funkcji wskaźników.
-
-W C można wykonywać operacje arytmetyczne na wskaźnikach:
-
-- `ptr + 1`
-- `ptr - 1`
-- `ptr += 1`
-
-### Najważniejsze:
-
-📌 **przesunięcie o 1 przesuwa wskaźnik o rozmiar typu**, na który wskazuje (np.
-int → zwykle 4 bajty)
-
----
-
-## Przykład
-
-```c
-int tab[] = {10, 20, 30, 40};
-int *p = tab;   // adres tab[0]
-
-p++;            // teraz wskazuje na tab[1]
-
-printf("%d\n", *p);  // 20
-```
-
-`p++` nie dodaje 1 bajtu — **dodaje jeden element typu int**.
-
----
-
-## Dostęp do tablicy dzięki pointer arithmetic
-
-```c
-int tab[] = {5, 10, 15, 20};
-int *p = tab;
-
-printf("%d\n", *(p+2)); // 15
-printf("%d\n", p[2]);   // 15 (to samo!)
-```
-
-Indeksowanie `p[i]` jest równoważne:
-
-```
-*(p + i)
-```
-
----
-
-## Przesuwanie wskaźnika w pętli
-
-```c
-int tab[] = {3, 6, 9, 12};
-int *p = tab;
-
-for(int i = 0; i < 4; i++) {
-    printf("%d ", *(p + i));
+if (x > 0) {
+    printf("Dodatnia\n");
+} else {
+    printf("Niedodatnia\n");
 }
 ```
 
-Lub:
-
-```c
-for(int *p = tab; p < tab + 4; p++) {
-    printf("%d ", *p);
-}
-```
-
-To klasyczna technika w C.
-
 ---
 
-# 📌 Wskaźniki i `scanf()`
-
-`scanf()` **zawsze oczekuje adresu**, nie wartości.
-
-Dlatego:
+### `else if` — wiele warunków
 
 ```c
-int x;
-scanf("%d", &x);
-```
-
-A nie:
-
-```c
-scanf("%d", x); // BŁĄD
+if (x == 0) {
+    printf("Zero\n");
+} else if (x > 0) {
+    printf("Dodatnia\n");
+} else {
+    printf("Ujemna\n");
+}
 ```
 
 ---
 
-# 📌 Wskaźniki jako argumenty funkcji “do zmiany danych”
+## Operator trójargumentowy `?:`
 
-Bardzo częsty, egzaminowy przykład:
+Skrócona forma `if / else`:
 
 ```c
-void zamien(int *a, int *b) {
-    int t = *a;
-    *a = *b;
-    *b = t;
-}
+int wynik = (x > 5) ? 1 : 0;
+```
 
-int main() {
-    int x = 5, y = 10;
-    zamien(&x, &y);
-    printf("%d %d", x, y); // 10 5
+---
+
+## `switch` — wybór wielu opcji
+
+Instrukcja `switch` pozwala wybrać jedną z wielu gałęzi w zależności od
+**wartości wyrażenia** (tzw. wyrażenia sterującego):
+
+```c
+switch (zmienna) {
+    case 1:
+        // ...
+        break;
+    case 2:
+        // ...
+        break;
+    default:
+        // ...
 }
 ```
+
+### Jakiego typu może być wyrażenie w `switch`?
+
+W języku C wyrażenie w `switch` **musi mieć typ całkowity po tzw. promocji
+całkowitoliczbowej**. W praktyce oznacza to, że możesz użyć:
+
+- `int`, `short`, `long`, `long long`
+- ich odmian bez znaku: `unsigned int`, `unsigned long` itd.
+- `char` (np. `switch (znak) { case 'a': ... }`)
+- typów wyliczeniowych `enum`
+
+Nie możesz użyć:
+
+- typów zmiennoprzecinkowych (`float`, `double`, `long double`)
+- wskaźników (`int *`, `char *` itd.)
+- struktur (`struct ...`) czy unii (`union ...`)
+
+Dodatkowo:
+
+- każda etykieta `case` musi być **stałą wyrażoną w czasie kompilacji** (np.
+  literał liczbowy, znak, element `enum`, wyrażenie z `#define`),
+- wartości w poszczególnych `case` **nie mogą się powtarzać**.
+
+Przykład użycia `char`:
+
+```c
+char komenda = 'a';
+
+switch (komenda) {
+    case 'a':
+        printf("Opcja A\n");
+        break;
+    case 'b':
+        printf("Opcja B\n");
+        break;
+    default:
+        printf("Nieznana komenda\n");
+}
+```
+
+---
+
+### Fall-through — co gdy nie ma `break`?
+
+Brak `break` powoduje „wpadanie” do kolejnych case’ów:
+
+```c
+switch (x) {
+    case 1:
+        printf("Jeden\n");
+    case 2:
+        printf("Dwa\n"); // wykona się także przy x == 1!
+}
+```
+
+---
+
+### Deklaracje w case — używaj klamer
+
+```c
+switch (x) {
+    case 1: {
+        int a = 10;
+        printf("%d\n", a);
+        break;
+    }
+    case 2:
+        printf("Case 2\n");
+        break;
+}
+```
+
+---
+
+### `default`
+
+```c
+switch (opcja) {
+    case 1:
+        printf("Opcja 1\n");
+        break;
+    default:
+        printf("Nieznana opcja\n");
+}
+```
+
+---
+
+### Przykład menu
+
+```c
+char opcja = '2';
+
+switch (opcja) {
+    case '1': printf("Start\n"); break;
+    case '2': printf("Opcje\n"); break;
+    case '3': printf("Wyjście\n"); break;
+    default:  printf("Błąd\n");
+}
+```
+
+---
+
+## 📝 Quiz — sprawdź swoją wiedzę!
+
+<QuizQuestion
+    question="Która instrukcja wykona się TYLKO wtedy, gdy warunek jest prawdziwy?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'if',
+            correct: true,
+            explanation:
+                'if wykonuje kod tylko wtedy, gdy warunek zwróci wartość niezerową (prawdę).',
+        },
+        {
+            id: 'b',
+            text: 'else',
+            correct: false,
+            explanation:
+                'else wykonuje się tylko wtedy, gdy poprzedni if był fałszywy — nie sprawdza warunku.',
+        },
+        {
+            id: 'c',
+            text: 'switch',
+            correct: false,
+            explanation:
+                'switch nie sprawdza warunku logicznego, tylko dopasowuje wartość do konkretnego case.',
+        },
+        {
+            id: 'd',
+            text: 'goto',
+            correct: false,
+            explanation:
+                'goto to skok do etykiety — nie ma nic wspólnego z warunkami.',
+        },
+    ]}
+/>
+
+<QuizQuestion
+    question="Co się stanie, jeśli w instrukcji switch zabraknie break?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'Program się nie skompiluje.',
+            correct: false,
+            explanation:
+                'Brak break to nie błąd kompilacji — kod jest poprawny składniowo.',
+        },
+        {
+            id: 'b',
+            text: 'Wykona się tylko pierwszy case.',
+            correct: false,
+            explanation:
+                'Bez break wykonają się WSZYSTKIE kolejne case-y aż do break lub końca switch.',
+        },
+        {
+            id: 'c',
+            text: 'Wykona się także kolejny case.',
+            correct: true,
+            explanation:
+                'To tzw. fall-through — program przechodzi do następnych sekcji case.',
+        },
+        {
+            id: 'd',
+            text: 'Program się zatrzyma.',
+            correct: false,
+            explanation:
+                'Brak break nie zatrzymuje programu — wykonanie trwa dalej.',
+        },
+    ]}
+/>
+
+<QuizQuestion
+    question="Co robi operator trójargumentowy ?:"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'Tworzy zmienną logiczną.',
+            correct: false,
+            explanation:
+                '?: nie tworzy zmiennej — wybiera jedną z dwóch wartości.',
+        },
+        {
+            id: 'b',
+            text: 'Zwraca jedną z dwóch wartości zależnie od warunku.',
+            correct: true,
+            explanation:
+                'Operator ?: działa jak skrócona forma if/else dla wyrażeń.',
+        },
+        {
+            id: 'c',
+            text: 'Zastępuje switch.',
+            correct: false,
+            explanation:
+                '?: zastępuje proste if/else, ale nie daje możliwości wielu gałęzi jak switch.',
+        },
+        {
+            id: 'd',
+            text: 'Przerywa działanie programu.',
+            correct: false,
+            explanation:
+                'Operator ?: nie ma wpływu na przepływ programu poza wyborem wartości.',
+        },
+    ]}
+/>
+
+<QuizQuestion
+    question="Które stwierdzenia o switch są prawdziwe?"
+    multiple={true}
+    options={[
+        {
+            id: 'a',
+            text: 'default jest opcjonalny.',
+            correct: true,
+            explanation:
+                'default nie jest wymagany — ale warto go dodawać jako obsługę nieprzewidzianych przypadków.',
+        },
+        {
+            id: 'b',
+            text: 'Wyrażenie w switch po promocji musi mieć typ całkowity (np. int, char, enum).',
+            correct: true,
+            explanation:
+                'switch akceptuje tylko typy całkowitoliczbowe oraz enum — nie działa z float, double itd.',
+        },
+        {
+            id: 'c',
+            text: 'Można mieć dwa identyczne case-y.',
+            correct: false,
+            explanation:
+                'Powtarzające się wartości case powodują błąd kompilacji — etykieta musi być unikalna.',
+        },
+        {
+            id: 'd',
+            text: 'switch może zastąpić wiele if-else.',
+            correct: true,
+            explanation:
+                'switch często upraszcza kod z wieloma porównaniami do tej samej zmiennej.',
+        },
+    ]}
+/>
+
+<QuizQuestion
+    question="Co zwróci operator (x > 5) ? 1 : 2 dla x = 3?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: '1',
+            correct: false,
+            explanation:
+                '1 zwróciłby, gdyby warunek był prawdziwy — ale 3 > 5 jest fałszem.',
+        },
+        {
+            id: 'b',
+            text: '2',
+            correct: true,
+            explanation:
+                'Warunek (x > 5) jest fałszywy, więc zwracana jest wartość po dwukropku: 2.',
+        },
+        {
+            id: 'c',
+            text: '3',
+            correct: false,
+            explanation:
+                'Operator ?: nie zwraca wartości zmiennej x, tylko jedną z dwóch zdefiniowanych opcji.',
+        },
+        {
+            id: 'd',
+            text: 'Błąd kompilacji',
+            correct: false,
+            explanation:
+                'Wyrażenie jest poprawne — nie ma żadnego błędu składni.',
+        },
+    ]}
+/>
+
+```c
+int x = 2;
+switch (x) {
+    case 1:
+    case 2 + 0:
+        printf("A\n");
+        break;
+    case 2:
+        printf("B\n");
+        break;
+    default:
+        printf("C\n");
+}
+```
+
+<QuizQuestion
+    question="Co wypisze powyższy kod?"
+    multiple={false}
+    options={[
+        {
+            id: 'a',
+            text: 'Wypisze A',
+            correct: false,
+            explanation:
+                'Wartość 2 pasowałaby do case 2, ale case 2 + 0 ma tę samą wartość i powoduje konflikt.',
+        },
+        {
+            id: 'b',
+            text: 'Wypisze B',
+            correct: false,
+            explanation:
+                'Nie dojdzie do wykonania kodu — program nie przejdzie kompilacji.',
+        },
+        {
+            id: 'c',
+            text: 'Wypisze C',
+            correct: false,
+            explanation:
+                'Również nie, bo switch nie wykona się z powodu błędu kompilacji.',
+        },
+        {
+            id: 'd',
+            text: 'Kod się nie skompiluje',
+            correct: true,
+            explanation:
+                'case 2 i case 2 + 0 mają identyczną wartość — a powtarzające się etykiety są błędem kompilacji.',
+        },
+    ]}
+/>

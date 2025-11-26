@@ -1,0 +1,249 @@
+# Wskaźniki
+
+Wskaźniki to jeden z najważniejszych i najbardziej charakterystycznych elementów
+języka C. Najprościej mówiąc: **wskaźnik to zmienna, która przechowuje adres
+innej zmiennej**, a nie jej wartość.
+
+Każda zmienna w programie ma swoje miejsce w pamięci — **adres**. Wskaźniki
+pozwalają ten adres zapisać, przekazać i używać do odczytu/modyfikacji danych.
+
+---
+
+## Kluczowe informacje o wskaźnikach
+
+- Wskaźnik przechowuje **adres**, nie wartość.
+- Typ wskaźnika określa, **na jaki typ danych wskazuje**, np.
+
+- `int *` → wskaźnik na `int`
+- `char *` → wskaźnik na `char`
+- Operator `&` pobiera **adres** zmiennej.
+- Operator `*` wykonuje **dereferencję**, czyli odczyt lub zapis wartości
+  znajdującej się pod danym adresem.
+
+---
+
+## Najprostszy przykład
+
+```c
+int x = 10;
+int *ptr = &x;   // ptr przechowuje adres zmiennej x
+
+printf("%d\n", x);     // wartość zmiennej
+printf("%p\n", ptr);   // adres zmiennej x
+printf("%d\n", *ptr);  // dereferencja — wartość pod adresem
+```
+
+---
+
+## Wyjaśnienie „po ludzku”
+
+Zmienna:
+
+```c
+int x = 10;
+```
+
+ma swój adres w pamięci, np.:
+
+```
+0x7ffc12a4b9c8
+```
+
+Jeśli chcemy go pobrać:
+
+```c
+printf("%p\n", &x);
+```
+
+Ten adres możemy zapisać w zmiennej typu _wskaźnik_:
+
+```c
+int *ptr = &x;
+```
+
+W tym momencie:
+
+- `ptr` to adres `x`
+- `*ptr` to wartość **x**
+
+---
+
+## Dereferencja – odczyt i zapis
+
+```c
+int x = 10;
+int *ptr = &x;
+
+printf("%d", *ptr); // 10
+
+*ptr = 20;          // zmienia wartość x!
+printf("%d", x);    // 20
+```
+
+### Uwaga na dwuznaczność `*`
+
+- **w deklaracji**: `int *ptr` → tworzymy wskaźnik
+- **poza deklaracją**: `*ptr` → dereferencja
+
+---
+
+# 📌 Przekazywanie danych przez wskaźniki do funkcji
+
+To kluczowe zastosowanie wskaźników.
+
+### Zwykłe przekazywanie (przez wartość):
+
+```c
+void fun(int x) { x = 5; }
+```
+
+Zmiana dotyczy tylko kopii — oryginalna zmienna się nie zmienia.
+
+### Przekazywanie przez adres:
+
+```c
+void ustawNa5(int *wsk) {
+    *wsk = 5;
+}
+
+int main() {
+    int x = 10;
+    ustawNa5(&x);
+    printf("%d", x); // 5
+}
+```
+
+Teraz funkcja **zmieniła oryginalną zmienną**, bo dostała jej adres.
+
+---
+
+# 📌 Wskaźniki a tablice
+
+W C nazwa tablicy to **stały wskaźnik** do pierwszego elementu.
+
+```c
+int tab[5] = {1, 2, 3, 4, 5};
+int *p = tab;   // to samo co &tab[0]
+```
+
+Możemy dereferencjonować tablicę jak wskaźnik:
+
+```c
+printf("%d", *tab);     // 1
+printf("%d", *(tab+1)); // 2
+printf("%d", tab[1]);   // 2
+```
+
+Tablica i wskaźnik nie są identyczne, ale często działają podobnie.
+
+---
+
+# 🔥 **Przesuwanie wskaźników (pointer arithmetic)**
+
+To jedna z najpotężniejszych i najbardziej nieoczywistych funkcji wskaźników.
+
+W C można wykonywać operacje arytmetyczne na wskaźnikach:
+
+- `ptr + 1`
+- `ptr - 1`
+- `ptr += 1`
+
+### Najważniejsze:
+
+📌 **przesunięcie o 1 przesuwa wskaźnik o rozmiar typu**, na który wskazuje (np.
+int → zwykle 4 bajty)
+
+---
+
+## Przykład
+
+```c
+int tab[] = {10, 20, 30, 40};
+int *p = tab;   // adres tab[0]
+
+p++;            // teraz wskazuje na tab[1]
+
+printf("%d\n", *p);  // 20
+```
+
+`p++` nie dodaje 1 bajtu — **dodaje jeden element typu int**.
+
+---
+
+## Dostęp do tablicy dzięki pointer arithmetic
+
+```c
+int tab[] = {5, 10, 15, 20};
+int *p = tab;
+
+printf("%d\n", *(p+2)); // 15
+printf("%d\n", p[2]);   // 15 (to samo!)
+```
+
+Indeksowanie `p[i]` jest równoważne:
+
+```
+*(p + i)
+```
+
+---
+
+## Przesuwanie wskaźnika w pętli
+
+```c
+int tab[] = {3, 6, 9, 12};
+int *p = tab;
+
+for(int i = 0; i < 4; i++) {
+    printf("%d ", *(p + i));
+}
+```
+
+Lub:
+
+```c
+for(int *p = tab; p < tab + 4; p++) {
+    printf("%d ", *p);
+}
+```
+
+To klasyczna technika w C.
+
+---
+
+# 📌 Wskaźniki i `scanf()`
+
+`scanf()` **zawsze oczekuje adresu**, nie wartości.
+
+Dlatego:
+
+```c
+int x;
+scanf("%d", &x);
+```
+
+A nie:
+
+```c
+scanf("%d", x); // BŁĄD
+```
+
+---
+
+# 📌 Wskaźniki jako argumenty funkcji “do zmiany danych”
+
+Bardzo częsty, egzaminowy przykład:
+
+```c
+void zamien(int *a, int *b) {
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
+
+int main() {
+    int x = 5, y = 10;
+    zamien(&x, &y);
+    printf("%d %d", x, y); // 10 5
+}
+```

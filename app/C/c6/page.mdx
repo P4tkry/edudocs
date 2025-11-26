@@ -3,7 +3,7 @@ import QuizQuestion from '../../../components/QuizQuestion';
 # Pętle
 
 Pętle pozwalają **powtarzać fragment kodu**, dopóki spełniony jest określony
-warunek lub aż wykonają się określoną liczbę razy.  
+warunek lub aż wykonają się określoną liczbę razy.
 W języku C mamy trzy podstawowe instrukcje iteracyjne:
 
 - `while`
@@ -12,19 +12,6 @@ W języku C mamy trzy podstawowe instrukcje iteracyjne:
 
 Każda z nich działa inaczej, ale wszystkie pozwalają na wykonywanie
 powtarzalnych operacji.
-
----
-
-## Wartość logiczna warunku
-
-Warunek w pętli to wyrażenie logiczne:
-
-- `0` → **fałsz**
-- wartości **niezerowe** → **prawda**
-
-> [!NOTE] **W C nie istnieje typ logiczny w wersjach przed C99.**  
-> Od C99 dostępny jest nagłówek `stdbool.h` oraz typ `bool`, ale tradycyjnie
-> wciąż używa się `int`.
 
 ---
 
@@ -48,7 +35,9 @@ while (i <= 5) {
 }
 ```
 
-> [!NOTE] Jeżeli warunek jest od początku fałszywy — kod wewnątrz pętli **nie
+> [!NOTE]
+>
+> Jeżeli warunek jest od początku fałszywy — kod wewnątrz pętli **nie
 > wykona się ani razu**.
 
 ---
@@ -71,7 +60,9 @@ for (int i = 1; i <= 5; ++i) {
 }
 ```
 
-> [!NOTE] Od **C99** można deklarować zmienne licznika _bezpośrednio_ w nagłówku
+> [!NOTE]
+>
+> Od **C99** można deklarować zmienne licznika _bezpośrednio_ w nagłówku
 > pętli (`for(int i = 0; ...)`). W C90 było to błędem.
 
 ---
@@ -131,7 +122,9 @@ for (int i = 0; i < 10; ++i) {
 }
 ```
 
-> [!NOTE] Nadużywanie `break` i `continue` prowadzi do mniej czytelnego kodu,
+> [!NOTE]
+>
+> Nadużywanie `break` i `continue` prowadzi do mniej czytelnego kodu,
 > ale w niektórych sytuacjach są bardzo praktyczne.
 
 ---
@@ -144,7 +137,9 @@ while (1) {
 }
 ```
 
-> [!NOTE] Zaleca się ostrożność — jeśli pętla nie ma poprawnego warunku
+> [!NOTE]
+>
+> Zaleca się ostrożność — jeśli pętla nie ma poprawnego warunku
 > zatrzymania, może doprowadzić do zawieszenia programu.
 
 ---
@@ -174,9 +169,10 @@ while (scanf("%d", &x) != 1) {
 }
 ```
 
-> [!NOTE] `scanf` **zwraca liczbę poprawnie wczytanych argumentów** — zawsze
-> trzeba to sprawdzać. W oficjalnych materiałach POPRO zwracanie wyniku `scanf`
-> jest wyraźnie podkreślane.
+> [!NOTE]
+>
+> `scanf` **zwraca liczbę poprawnie wczytanych argumentów** — zawsze
+> trzeba to sprawdzać, jeżeli chcemy wiedzieć, czy użytkownik podał już nam wszystkie dane.
 
 ---
 

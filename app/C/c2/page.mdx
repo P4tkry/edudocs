@@ -45,10 +45,9 @@ Najpopularniejsze typy:
 
 ---
 
-## 🔥 WAŻNE: Relacje rozmiarów typów w C
+## Relacje rozmiarów typów
 
-Standard C **nie gwarantuje konkretnych rozmiarów** (`int` nie musi mieć 4
-bajtów!), ale wymaga zachowania następującej relacji:
+Standard C **nie gwarantuje konkretnych rozmiarów** (oprócz char = 1 bajt!!!), ale wymaga zachowania następującej relacji:
 
 ```
 
@@ -65,55 +64,10 @@ To jedyna pewna rzecz dotycząca rozmiarów typów całkowitych.
 - `long` **nigdy nie może być mniejszy** niż `int`,
 - `int` nie ma gwarancji rozmiaru 4 bajtów.
 
----
-
-## Modele architektury (bardzo ważne w C)
-
-W zależności od systemu i kompilatora typy mogą mieć różne rozmiary.
-
-### **ILP32** — klasyczne 32-bit (Linux 32-bit, Windows 32-bit)
-
-| Typ       | Rozmiar |
-| --------- | ------- |
-| int       | 4 B     |
-| long      | 4 B     |
-| long long | 8 B     |
-| wskaźnik  | 4 B     |
-
-👉 `long == int`
+**Podobnie z innymi rodzajami zmiennych**
 
 ---
 
-### **LP64** — Linux 64-bit, macOS 64-bit
-
-| Typ       | Rozmiar |
-| --------- | ------- |
-| int       | 4 B     |
-| long      | 8 B     |
-| long long | 8 B     |
-| wskaźnik  | 8 B     |
-
-👉 `long` **większy** od `int`
-
----
-
-### **LLP64** — Windows 64-bit
-
-| Typ       | Rozmiar |
-| --------- | ------- |
-| int       | 4 B     |
-| long      | 4 B     |
-| long long | 8 B     |
-| wskaźnik  | 8 B     |
-
-👉 `long == int` nawet na 64-bitowym Windowsie
-
-> [!NOTE]
->
-> To, że system jest 64-bitowy, **nie oznacza**, że `long` będzie 64-bitowy. W
-> Windows 64-bit — _nie jest_.
-
----
 
 ## Pojedyncza i podwójna precyzja — float vs double
 

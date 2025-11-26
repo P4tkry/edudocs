@@ -1,424 +1,372 @@
 import QuizQuestion from '../../../components/QuizQuestion';
 
-# Instrukcje warunkowe
+# Tablice w języku C
 
-## Wprowadzenie
+Tablica to **ciąg elementów tego samego typu ułożonych w pamięci kolejno, bez przerw**.
+Elementy tablicy mają:
 
-Instrukcje warunkowe pozwalają wykonywać **różne fragmenty programu** w
-zależności od spełnienia określonych warunków. Dzięki nim program może
-podejmować decyzje — reagować na dane, wyniki obliczeń czy działania
-użytkownika.
+- **wspólną nazwę**,
+- **ten sam typ**,
+- są dostępne przez **indeks**, zaczynający się od **0**.
 
-W języku C mamy kilka sposobów podejmowania decyzji:
-
-- `if`
-- `else`
-- `else if`
-- operator trójargumentowy `?:`
-- `switch` (rozgałęzienia wielokrotne)
+Tablice są fundamentem pracy w C — są szybkie, przewidywalne i bardzo niskopoziomowe.
 
 ---
 
-## Jak działają warunki?
-
-Warunek to wyrażenie, które **zwraca wartość logiczną**:
-
-- `0` → **fałsz**
-- dowolna wartość **niezerowa** → **prawda**
-
----
-
-## `if` — podstawowa instrukcja warunkowa
-
-Instrukcja `if` wykonuje blok kodu **tylko wtedy**, gdy warunek jest prawdziwy.
+## Deklaracja tablicy
 
 ```c
-if (warunek) {
-    // kod
-}
+typ nazwa[ROZMIAR];
+````
+
+### Przykład: tablica liczb całkowitych
+
+```c
+int liczby[5];
+```
+
+To oznacza:
+
+* w pamięci powstaje 5 kolejnych `int`,
+* dostęp do elementów: `liczby[0]`, ..., `liczby[4]`,
+* indeks **zawsze zaczyna się od 0**, nie od 1.
+
+---
+
+## Inicjalizacja tablicy
+
+### 1) Inicjalizacja pełna
+
+```c
+int tab[5] = {1, 2, 3, 4, 5};
+```
+
+### 2) Inicjalizacja częściowa
+
+Brakujące elementy są wypełniane **zerami**:
+
+```c
+int tab[5] = {1, 2};  // {1, 2, 0, 0, 0}
+```
+
+### 3) Automatyczne obliczenie rozmiaru
+
+```c
+int tab[] = {4, 8, 15, 16, 23, 42};
 ```
 
 ---
 
-### `else` — kod wykonywany przy fałszu
+## Dostęp do elementów
 
 ```c
-if (x > 0) {
-    printf("Dodatnia\n");
-} else {
-    printf("Niedodatnia\n");
-}
+int x = tab[0];   // pierwszy element
+tab[3] = 99;      // zmiana wartości
+```
+
+> [!NOTE]
+>
+> **Standard C nie sprawdza indeksów tablicy.**
+> `tab[9999] = 7;` *skompiluje się*, ale prowadzi do nadpisania pamięci → błąd krytyczny.
+
+---
+
+## Iteracja po tablicy
+
+```c
+int t[5] = {1,2,3,4,5};
+
+for (int i = 0; i < 5; i++)
+    printf("%d\n", t[i]);
+```
+
+Lepsza opcja — obliczanie rozmiaru tablicy:
+
+```c
+int roz = sizeof(t) / sizeof(t[0]);
+```
+
+### Co oznaczają te wartości?
+
+> [!NOTE]
+>
+> `sizeof(t)` → liczba **bajtów całej tablicy**
+> `sizeof(t[0])` → liczba **bajtów pojedynczego elementu**
+>
+> Dzieląc te wartości dostajemy **liczbę elementów tablicy**, niezależnie od typu i rozmiaru elementu.
+>
+> To działa jedynie dla **tablic statycznych (lokalnych/globalnych)**.
+> Dla wskaźników nie działa — o tym w dziale o wskaźnikach.
+
+---
+
+## Tablice typów innych niż `int`
+
+Tablice mogą przechowywać dowolne typy:
+
+### `double`
+
+```c
+double pomiary[3] = {1.1, 2.5, 3.14};
+```
+
+### `char`
+
+```c
+char znaki[4] = {'A', 'B', 'C', 'D'};
+```
+
+### `_Bool`
+
+```c
+_Bool flags[3] = {1, 0, 1};
+```
+
+podobnie dla innych typów zmiennych
+
+## Tablice wielowymiarowe
+
+Najczęściej tablice 2D:
+
+```c
+int mat[3][4];
+```
+
+To macierz **3×4** (3 wiersze, 4 kolumny).
+
+### Inicjalizacja:
+
+```c
+int mat[2][3] = {
+    {1, 2, 3},
+    {4, 5, 6}
+};
+```
+
+### Dostęp:
+
+```c
+printf("%d\n", mat[1][2]);  // 6
 ```
 
 ---
 
-### `else if` — wiele warunków
+## Tablica 2D jako pamięć ciągła — o co chodzi?
+
+Tablica 2D jest fizycznie **jednym dużym blokiem pamięci**.
+C nie tworzy tablic tablic — tworzy **ciąg liczb**, ale interpretuje go jak macierz.
+
+### Wizualizacja:
+
+Dla:
 
 ```c
-if (x == 0) {
-    printf("Zero\n");
-} else if (x > 0) {
-    printf("Dodatnia\n");
-} else {
-    printf("Ujemna\n");
-}
+int m[2][3] = {
+    {1, 2, 3},
+    {4, 5, 6}
+};
+```
+
+W pamięci:
+
+```
+[1][2][3][4][5][6]
+```
+
+### Co to daje?
+
+* szybki dostęp do elementów,
+* możliwość „ręcznego” obliczania indeksów:
+
+```c
+m[i][j]  ≡  *(&m[0][0] + i * LICZBA_KOLUMN + j)
+```
+
+Ale **nie rób tego na początku nauki** — to przyda się w optymalizacji i programowaniu niskopoziomowym.
+
+---
+
+# Tablice znaków (`char[]`)
+
+To jeden z najważniejszych tematów w całym C.
+
+* **Tablica `char` to nie zawsze napis.**
+* Ale **napis zawsze jest tablicą `char` zakończoną `'\0'`**.
+
+---
+
+## Napisy w C — jak działają?
+
+W C **nie ma typu `string`**.
+Napis to **ciąg znaków zakończony null-terminatorem `'\0'`**.
+
+### Różnica między `'a'` a `"a"`:
+
+* `'a'` → **pojedynczy znak** (`char`)
+* `"a"` → **napis** (`char[2]` → `'a'`, `'\0'`)
+
+> [!NOTE]
+>
+> Wpisanie tekstu w cudzysłowie:
+>
+> ```c
+> "Ala"
+> ```
+>
+> automatycznie dodaje **`'\0'` na końcu**.
+> To zachowanie jest gwarantowane przez standard C.
+
+### Przykład
+
+```c
+char s[] = "Ala";
+```
+
+W pamięci:
+
+```
+'A' 'l' 'a' '\0'
 ```
 
 ---
 
-## Operator trójargumentowy `?:`
+## Inicjalizacja napisu
 
-Skrócona forma `if / else`:
+### 1) Przez literał (najczęściej)
 
 ```c
-int wynik = (x > 5) ? 1 : 0;
+char s[] = "Hello";
+```
+
+Compiler sam oblicza rozmiar (6 znaków: H e l l o \0).
+
+### 2) Ręcznie
+
+```c
+char s[6] = {'H', 'E', 'L', 'L', 'O', '\0'};
 ```
 
 ---
 
-## `switch` — wybór wielu opcji
+## Kluczowa zasada — dodatkowy bajt
 
-Instrukcja `switch` pozwala wybrać jedną z wielu gałęzi w zależności od
-**wartości wyrażenia** (tzw. wyrażenia sterującego):
-
-```c
-switch (zmienna) {
-    case 1:
-        // ...
-        break;
-    case 2:
-        // ...
-        break;
-    default:
-        // ...
-}
-```
-
-### Jakiego typu może być wyrażenie w `switch`?
-
-W języku C wyrażenie w `switch` **musi mieć typ całkowity po tzw. promocji
-całkowitoliczbowej**. W praktyce oznacza to, że możesz użyć:
-
-- `int`, `short`, `long`, `long long`
-- ich odmian bez znaku: `unsigned int`, `unsigned long` itd.
-- `char` (np. `switch (znak) { case 'a': ... }`)
-- typów wyliczeniowych `enum`
-
-Nie możesz użyć:
-
-- typów zmiennoprzecinkowych (`float`, `double`, `long double`)
-- wskaźników (`int *`, `char *` itd.)
-- struktur (`struct ...`) czy unii (`union ...`)
-
-Dodatkowo:
-
-- każda etykieta `case` musi być **stałą wyrażoną w czasie kompilacji** (np.
-  literał liczbowy, znak, element `enum`, wyrażenie z `#define`),
-- wartości w poszczególnych `case` **nie mogą się powtarzać**.
-
-Przykład użycia `char`:
+Jeśli chcesz przechować **n znaków**, tablica musi mieć **n + 1 bajtów**:
 
 ```c
-char komenda = 'a';
-
-switch (komenda) {
-    case 'a':
-        printf("Opcja A\n");
-        break;
-    case 'b':
-        printf("Opcja B\n");
-        break;
-    default:
-        printf("Nieznana komenda\n");
-}
+char buf[11];  // dla 10 znaków + '\0'
 ```
 
 ---
 
-### Fall-through — co gdy nie ma `break`?
+## Bezpieczne wczytywanie napisów
 
-Brak `break` powoduje „wpadanie” do kolejnych case’ów:
+### ❌ NIEBEZPIECZNIE
 
 ```c
-switch (x) {
-    case 1:
-        printf("Jeden\n");
-    case 2:
-        printf("Dwa\n"); // wykona się także przy x == 1!
-}
+scanf("%s", buf);
 ```
+
+Może przepełnić bufor.
+
+### ✔️ LEPIEJ
+
+```c
+scanf("%19s", buf);  // dla char buf[20]
+```
+
+### ✔️ NAJBEZPIECZNIEJ
+
+```c
+fgets(buf, sizeof(buf), stdin);
+```
+
+> [!NOTE]
+>
+> `fgets()` wczytuje max `sizeof(buf) - 1` znaków
+> i **zawsze** terminator `'\0'`.
 
 ---
 
-### Deklaracje w case — używaj klamer
+## Najczęstsze błędy z tablicami znaków
+
+### 1) Za mała tablica
 
 ```c
-switch (x) {
-    case 1: {
-        int a = 10;
-        printf("%d\n", a);
-        break;
-    }
-    case 2:
-        printf("Case 2\n");
-        break;
-}
+char s[3] = "Ala"; // ❌ potrzeba 4 bajtów
 ```
+
+### 2) Pisanie poza tablicę
+
+```c
+char s[5];
+scanf("%s", s); // 100 znaków = katastrofa
+```
+
+### 3) Mieszanie tablic i wskaźników
+
+```c
+char s[] = "Kot";
+char *p = s; // OK
+p++;         // przesuwa wskaźnik
+```
+
+Więcej o tym w dziale o wskaźnikach.
 
 ---
 
-### `default`
-
-```c
-switch (opcja) {
-    case 1:
-        printf("Opcja 1\n");
-        break;
-    default:
-        printf("Nieznana opcja\n");
-}
-```
-
----
-
-### Przykład menu
-
-```c
-char opcja = '2';
-
-switch (opcja) {
-    case '1': printf("Start\n"); break;
-    case '2': printf("Opcje\n"); break;
-    case '3': printf("Wyjście\n"); break;
-    default:  printf("Błąd\n");
-}
-```
-
----
-
-## 📝 Quiz — sprawdź swoją wiedzę!
+# Quiz — tablice i napisy
 
 <QuizQuestion
-    question="Która instrukcja wykona się TYLKO wtedy, gdy warunek jest prawdziwy?"
-    multiple={false}
-    options={[
-        {
-            id: 'a',
-            text: 'if',
-            correct: true,
-            explanation:
-                'if wykonuje kod tylko wtedy, gdy warunek zwróci wartość niezerową (prawdę).',
-        },
-        {
-            id: 'b',
-            text: 'else',
-            correct: false,
-            explanation:
-                'else wykonuje się tylko wtedy, gdy poprzedni if był fałszywy — nie sprawdza warunku.',
-        },
-        {
-            id: 'c',
-            text: 'switch',
-            correct: false,
-            explanation:
-                'switch nie sprawdza warunku logicznego, tylko dopasowuje wartość do konkretnego case.',
-        },
-        {
-            id: 'd',
-            text: 'goto',
-            correct: false,
-            explanation:
-                'goto to skok do etykiety — nie ma nic wspólnego z warunkami.',
-        },
-    ]}
+  question="Które zdanie o tablicach w C jest prawdziwe?"
+  multiple={false}
+  options={[
+    { id: 'a', text: 'Indeksowanie zaczyna się od 1', correct: false },
+    { id: 'b', text: 'Tablica jest ciągłym blokiem pamięci', correct: true },
+    { id: 'c', text: 'Tablice mają dynamiczny rozmiar', correct: false },
+    { id: 'd', text: 'C sprawdza poprawność indeksów tablicy', correct: false },
+  ]}
 />
 
 <QuizQuestion
-    question="Co się stanie, jeśli w instrukcji switch zabraknie break?"
-    multiple={false}
-    options={[
-        {
-            id: 'a',
-            text: 'Program się nie skompiluje.',
-            correct: false,
-            explanation:
-                'Brak break to nie błąd kompilacji — kod jest poprawny składniowo.',
-        },
-        {
-            id: 'b',
-            text: 'Wykona się tylko pierwszy case.',
-            correct: false,
-            explanation:
-                'Bez break wykonają się WSZYSTKIE kolejne case-y aż do break lub końca switch.',
-        },
-        {
-            id: 'c',
-            text: 'Wykona się także kolejny case.',
-            correct: true,
-            explanation:
-                'To tzw. fall-through — program przechodzi do następnych sekcji case.',
-        },
-        {
-            id: 'd',
-            text: 'Program się zatrzyma.',
-            correct: false,
-            explanation:
-                'Brak break nie zatrzymuje programu — wykonanie trwa dalej.',
-        },
-    ]}
+  question="Ile bajtów musi mieć tablica, która ma przechować 12 znaków napisu?"
+  multiple={false}
+  options={[
+    { id: 'a', text: '12', correct: false },
+    { id: 'b', text: '13', correct: true, explanation: 'Musi zmieścić 12 znaków + terminator \\0.' },
+    { id: 'c', text: '11', correct: false },
+    { id: 'd', text: '24', correct: false },
+  ]}
 />
 
 <QuizQuestion
-    question="Co robi operator trójargumentowy ?:"
-    multiple={false}
-    options={[
-        {
-            id: 'a',
-            text: 'Tworzy zmienną logiczną.',
-            correct: false,
-            explanation:
-                '?: nie tworzy zmiennej — wybiera jedną z dwóch wartości.',
-        },
-        {
-            id: 'b',
-            text: 'Zwraca jedną z dwóch wartości zależnie od warunku.',
-            correct: true,
-            explanation:
-                'Operator ?: działa jak skrócona forma if/else dla wyrażeń.',
-        },
-        {
-            id: 'c',
-            text: 'Zastępuje switch.',
-            correct: false,
-            explanation:
-                '?: zastępuje proste if/else, ale nie daje możliwości wielu gałęzi jak switch.',
-        },
-        {
-            id: 'd',
-            text: 'Przerywa działanie programu.',
-            correct: false,
-            explanation:
-                'Operator ?: nie ma wpływu na przepływ programu poza wyborem wartości.',
-        },
-    ]}
+  question='Co przedstawia literał "Kot"?'
+  multiple={false}
+  options={[
+    { id: 'a', text: 'Pojedynczy znak', correct: false },
+    { id: 'b', text: 'Napis zakończony \\0', correct: true },
+    { id: 'c', text: 'Adres funkcji', correct: false },
+    { id: 'd', text: 'Niepoprawną konstrukcję', correct: false },
+  ]}
 />
 
 <QuizQuestion
-    question="Które stwierdzenia o switch są prawdziwe?"
-    multiple={true}
-    options={[
-        {
-            id: 'a',
-            text: 'default jest opcjonalny.',
-            correct: true,
-            explanation:
-                'default nie jest wymagany — ale warto go dodawać jako obsługę nieprzewidzianych przypadków.',
-        },
-        {
-            id: 'b',
-            text: 'Wyrażenie w switch po promocji musi mieć typ całkowity (np. int, char, enum).',
-            correct: true,
-            explanation:
-                'switch akceptuje tylko typy całkowitoliczbowe oraz enum — nie działa z float, double itd.',
-        },
-        {
-            id: 'c',
-            text: 'Można mieć dwa identyczne case-y.',
-            correct: false,
-            explanation:
-                'Powtarzające się wartości case powodują błąd kompilacji — etykieta musi być unikalna.',
-        },
-        {
-            id: 'd',
-            text: 'switch może zastąpić wiele if-else.',
-            correct: true,
-            explanation:
-                'switch często upraszcza kod z wieloma porównaniami do tej samej zmiennej.',
-        },
-    ]}
+  question="Która forma wczytywania napisów jest najbezpieczniejsza?"
+  multiple={false}
+  options={[
+    { id: 'a', text: 'scanf("%s", buf)', correct: false },
+    { id: 'b', text: 'scanf("%19s", buf)', correct: false },
+    { id: 'c', text: 'fgets(buf, sizeof(buf), stdin)', correct: true },
+    { id: 'd', text: 'gets(buf)', correct: false },
+  ]}
 />
 
 <QuizQuestion
-    question="Co zwróci operator (x > 5) ? 1 : 2 dla x = 3?"
-    multiple={false}
-    options={[
-        {
-            id: 'a',
-            text: '1',
-            correct: false,
-            explanation:
-                '1 zwróciłby, gdyby warunek był prawdziwy — ale 3 > 5 jest fałszem.',
-        },
-        {
-            id: 'b',
-            text: '2',
-            correct: true,
-            explanation:
-                'Warunek (x > 5) jest fałszywy, więc zwracana jest wartość po dwukropku: 2.',
-        },
-        {
-            id: 'c',
-            text: '3',
-            correct: false,
-            explanation:
-                'Operator ?: nie zwraca wartości zmiennej x, tylko jedną z dwóch zdefiniowanych opcji.',
-        },
-        {
-            id: 'd',
-            text: 'Błąd kompilacji',
-            correct: false,
-            explanation:
-                'Wyrażenie jest poprawne — nie ma żadnego błędu składni.',
-        },
-    ]}
-/>
-
-```c
-int x = 2;
-switch (x) {
-    case 1:
-    case 2 + 0:
-        printf("A\n");
-        break;
-    case 2:
-        printf("B\n");
-        break;
-    default:
-        printf("C\n");
-}
-```
-
-<QuizQuestion
-    question="Co wypisze powyższy kod?"
-    multiple={false}
-    options={[
-        {
-            id: 'a',
-            text: 'Wypisze A',
-            correct: false,
-            explanation:
-                'Wartość 2 pasowałaby do case 2, ale case 2 + 0 ma tę samą wartość i powoduje konflikt.',
-        },
-        {
-            id: 'b',
-            text: 'Wypisze B',
-            correct: false,
-            explanation:
-                'Nie dojdzie do wykonania kodu — program nie przejdzie kompilacji.',
-        },
-        {
-            id: 'c',
-            text: 'Wypisze C',
-            correct: false,
-            explanation:
-                'Również nie, bo switch nie wykona się z powodu błędu kompilacji.',
-        },
-        {
-            id: 'd',
-            text: 'Kod się nie skompiluje',
-            correct: true,
-            explanation:
-                'case 2 i case 2 + 0 mają identyczną wartość — a powtarzające się etykiety są błędem kompilacji.',
-        },
-    ]}
+  question="Jak wygląda napis 'Ala' w pamięci?"
+  multiple={false}
+  options={[
+    { id: 'a', text: "A l a", correct: false },
+    { id: 'b', text: "A l a \\0", correct: true },
+    { id: 'c', text: "\\0 A l a", correct: false },
+    { id: 'd', text: "A l a ?", correct: false },
+  ]}
 />

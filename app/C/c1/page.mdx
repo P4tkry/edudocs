@@ -164,6 +164,8 @@ int main(void) {
 - `scanf()` musi dostać **adres**, aby zmodyfikować zmienną.
 - Wyjątek: napisy (`char[]`) — tablica _jest_ adresem.
 
+O tym, czym są adresy i wskaźniki będzie więcej w kolejnych rozdziałach.
+
 ---
 
 ## Specyfikatory formatu w `scanf`
@@ -207,7 +209,7 @@ printf("Suma: %d\n", a + b);
 ## Wczytywanie napisów
 
 ```c
-char imie[20];
+char imie[20]; // przygotowujemy miejsce na imię - więcej o buforach i stringach w kolejnych rozdziałach
 
 printf("Podaj imię: ");
 scanf("%19s", imie); // limitowanie długości — BEZPIECZNIE!

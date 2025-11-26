@@ -1,0 +1,1702 @@
+import QuizQuestion from '@/components/QuizQuestion';
+
+# Test C
+
+## Pytanie 1 – całkowite typy zmiennych
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące całkowitych typów zmiennych."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Typ short nie jest typem całkowitym.',
+      correct: false,
+      explanation: 'short jest pełnoprawnym typem całkowitym zgodnie ze standardem C.'
+    },
+    {
+      id: 'b',
+      text: 'Standard gwarantuje, że typ int ma przynajmniej rozmiar dwóch bajtów.',
+      correct: true,
+      explanation: 'Standard C wymaga, aby sizeof(int) był co najmniej równy 2 bajtom, czyli 16 bitom.'
+    },
+    {
+      id: 'c',
+      text: 'Typ char ma rozmiar jednego bajtu.',
+      correct: true,
+      explanation: 'Standard definiuje, że sizeof(char) zawsze wynosi dokładnie 1 bajt.'
+    },
+    {
+      id: 'd',
+      text: 'Typ long może zajmować tyle samo bajtów co typ int.',
+      correct: true,
+      explanation: 'Dozwolone są implementacje, w których sizeof(long) == sizeof(int).'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 2 – literał liczbowy
+
+<QuizQuestion
+  question="Liczba 100 użyta w programie..."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Jest literałem liczby całkowitej.',
+      correct: true,
+      explanation: 'Literał 100 bez sufiksów jest literałem typu int.'
+    },
+    {
+      id: 'b',
+      text: 'Może służyć do definiowania zmiennej typu int.',
+      correct: true,
+      explanation: 'Można zapisać instrukcję: int x = 100;'
+    },
+    {
+      id: 'c',
+      text: 'Może być L-wartością.',
+      correct: false,
+      explanation: 'Literały liczbowe są R-wartościami i nie mogą stać po lewej stronie operatora przypisania.'
+    },
+    {
+      id: 'd',
+      text: 'Oznacza liczbę binarną.',
+      correct: false,
+      explanation: 'W C liczby binarne zapisuje się z prefiksem 0b, np. 0b1010.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 3 – dyrektywa include
+
+Kod:
+
+```c
+#include <stdio.h>
+````
+
+<QuizQuestion
+  question="Co oznacza dyrektywa include stdio.h?"
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Efektywnie wstawia zawartość pliku nagłówkowego stdio.h w miejscu dyrektywy.',
+      correct: true,
+      explanation: 'Preprocesor wykonuje tekstowe wklejenie treści pliku nagłówkowego.'
+    },
+    {
+      id: 'b',
+      text: 'Jest instrukcją dla preprocesora.',
+      correct: true,
+      explanation: 'include jest dyrektywą preprocesora, nie zwykłą instrukcją języka C.'
+    },
+    {
+      id: 'c',
+      text: 'Pozwala korzystać tylko z funkcji printf.',
+      correct: false,
+      explanation: 'Nagłówek stdio.h udostępnia deklaracje wielu funkcji, nie tylko printf.'
+    },
+    {
+      id: 'd',
+      text: 'Jest bezpośrednią instrukcją dla kompilatora.',
+      correct: false,
+      explanation: 'Kompilator dostaje już kod po przetworzeniu przez preprocesor.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 4 – typedef vs define
+
+Kod:
+
+```c
+typedef char *String_t;
+#define String_d char *
+
+String_t s1, s2;
+String_d s3, s4;
+```
+
+<QuizQuestion
+  question="Porównaj użycie typedef i define do tworzenia aliasów typów."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Deklaracja typedef char *String_t; jest niepoprawna.',
+      correct: false,
+      explanation: 'To poprawny alias typu – String_t oznacza wskaźnik do typu char.'
+    },
+    {
+      id: 'b',
+      text: 'Zmienna s2 i zmienna s4 są wskaźnikami do char.',
+      correct: false,
+      explanation: 'Po rozwinięciu makra tylko s3 jest wskaźnikiem, s4 jest zwykłym char.'
+    },
+    {
+      id: 'c',
+      text: 'String_d i String_t sprawiają, że s1, s2, s3 i s4 mają ten sam typ.',
+      correct: false,
+      explanation: 'typedef działa poprawnie, ale define robi podmianę tekstu i zmienne nie mają wszystkich identycznego typu.'
+    },
+    {
+      id: 'd',
+      text: 'Do tworzenia nowych nazw typów zaleca się używać typedef, a nie define.',
+      correct: true,
+      explanation: 'typedef działa na poziomie typów, define to tylko makro tekstowe i bywa źródłem subtelnych błędów.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 5 – tablica 2D i VLA
+
+Kod:
+
+```c
+const int SIZE_X = 3;
+const int SIZE_Y = 3;
+int tab2D[SIZE_X][SIZE_Y];
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące tablicy tab2D."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Zadeklarowana tablica jest tablicą typu VLA.',
+      correct: true,
+      explanation: 'Rozmiar opiera się na zmiennych const, które nie muszą być stałymi czasu kompilacji, więc tablica może być traktowana jako VLA.'
+    },
+    {
+      id: 'b',
+      text: 'Nazwa tablicy tab2D jest równa adresowi elementu tab2D[1][1].',
+      correct: false,
+      explanation: 'Nazwa tablicy to adres pierwszego elementu, czyli tab2D[0][0].'
+    },
+    {
+      id: 'c',
+      text: 'Tablica tab2D składa się z dziewięciu elementów typu int.',
+      correct: true,
+      explanation: 'Rozmiar całkowity tablicy to SIZE_X * SIZE_Y = 3 * 3 = 9 elementów.'
+    },
+    {
+      id: 'd',
+      text: 'Możliwe jest poprawne odwołanie się do elementu tab2D[3][3].',
+      correct: false,
+      explanation: 'Indeksy tablicy dwuwymiarowej mieszczą się w zakresie 0..2, więc tab2D[3][3] jest poza zakresem.'
+    }
+  ]}
+/>
+
+
+
+# Część 2 — Wskaźniki, operacje na zmiennych, sekwencyjność, struktury
+
+---
+
+## Pytanie 6 – Tablica i efekt działania kodu
+
+Kod:
+
+```c
+int tab[] = {0,0,0};
+int i = 0;
+tab[i] = i++ + i++;
+printf("t0 = %d, t1 = %d, t2 = %d, i = %d",
+       tab[0], tab[1], tab[2], i);
+````
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące działania programu."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Jeśli zmienna i zostałaby zainicjalizowana wartością 1, to wynik działania programu byłby deterministyczny.',
+      correct: false,
+      explanation: 'Wyrażenie i++ + i++ ma nieokreślony porządek ewaluacji. Wynik jest niedeterministyczny niezależnie od wartości początkowej.'
+    },
+    {
+      id: 'b',
+      text: 'Wynik działania programu to zawsze: t0 = 0, t1 = 0, t2 = 1, i = 2.',
+      correct: false,
+      explanation: 'Standard C nie określa kolejności obliczeń, więc wynik może być różny na różnych kompilatorach.'
+    },
+    {
+      id: 'c',
+      text: 'Program został napisany niepoprawnie.',
+      correct: true,
+      explanation: 'Kod modyfikuje zmienną i więcej niż raz pomiędzy punktami sekwencyjnymi, co prowadzi do nieokreślonego zachowania.'
+    },
+    {
+      id: 'd',
+      text: 'Program prawdopodobnie się skompiluje.',
+      correct: true,
+      explanation: 'Składniowo kod jest poprawny — problem dotyczy logiki wykonania, nie składni.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 7 – Deklaracja zmiennych
+
+<QuizQuestion
+  question="Deklarowanie zmiennych w programie napisanym w C..."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Dotyczy tylko zmiennych typu podstawowego.',
+      correct: false,
+      explanation: 'Deklarować trzeba każdą zmienną — także tablice, struktury, wskaźniki itd.'
+    },
+    {
+      id: 'b',
+      text: 'Jest specjalną dyrektywą preprocesora.',
+      correct: false,
+      explanation: 'Deklaracje są elementem języka C — preprocesor ich nie przetwarza.'
+    },
+    {
+      id: 'c',
+      text: 'Powoduje utworzenie etykiety (nazwy) zmiennej.',
+      correct: true,
+      explanation: 'Deklaracja wprowadza identyfikator zmiennej do przestrzeni nazw.'
+    },
+    {
+      id: 'd',
+      text: 'Jest obowiązkowe w standardach C99 i starszych.',
+      correct: true,
+      explanation: 'W każdym standardzie C zmienna musi zostać zadeklarowana przed użyciem.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 8 – Struktury i typedef
+
+Kod:
+
+```c
+struct p1 {
+    int x;
+    int y;
+};
+
+typedef struct {
+    int x;
+    int y;
+} p2;
+
+int main(void) {
+    struct p1 pc;
+    struct p1 *pa, *pb = &pc;
+    p2 pd, *pe;
+}
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące struktur i typedef."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Zmienna pd została zadeklarowana niepoprawnie, ponieważ p2 jest strukturą i brakuje słowa kluczowego struct.',
+      correct: false,
+      explanation: 'typedef tworzy alias typu — p2 zachowuje się jak nazwa typu, nie wymaga struct.'
+    },
+    {
+      id: 'b',
+      text: 'Przypisanie pc do *pb jest poprawne i kompilator to zaakceptuje.',
+      correct: true,
+      explanation: 'pb wskazuje na pc, więc można wykonać *pb = pc;.'
+    },
+    {
+      id: 'c',
+      text: 'pc jest strukturą zawierającą dwa pola typu int i można wykonać pc.x = 10;',
+      correct: true,
+      explanation: 'pc ma pola x i y, a operator . służy do ich ustawiania.'
+    },
+    {
+      id: 'd',
+      text: 'pa zawiera dwie liczby typu int i można wykonać pa->x = 10;',
+      correct: false,
+      explanation: 'pa jest wskaźnikiem, a nie strukturą — dopóki nie wskazuje na obiekt, dereferencja jest błędna.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 9 – const przy wskaźnikach
+
+Kod:
+
+```c
+const int *var;
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące wskaźnika const int *."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Wskaźnik może przechowywać wartość zmiennej int a = 10.',
+      correct: false,
+      explanation: 'Wskaźnik przechowuje adres, nie wartość. Może wskazywać na a, ale nie przechowuje jego wartości.'
+    },
+    {
+      id: 'b',
+      text: 'Wskaźnik może przechowywać adres zmiennej typu float.',
+      correct: false,
+      explanation: 'Typ wskaźnika to const int*, więc może wskazywać tylko na obiekty typu int.'
+    },
+    {
+      id: 'c',
+      text: 'Do wskaźnika można przypisać adresy różnych zmiennych typu int.',
+      correct: true,
+      explanation: 'const dotyczy obiektu wskazywanego, nie wskaźnika — wskaźnik można zmieniać.'
+    },
+    {
+      id: 'd',
+      text: 'Nie można zmieniać wartości zmiennej wskazywanej przez ten wskaźnik.',
+      correct: true,
+      explanation: 'const powoduje, że poprzez wskaźnik nie wolno modyfikować obiektu typu int.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 10 – Deklaracja wskaźnika
+
+Kod:
+
+```c
+int* p1, p2;
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące deklaracji int* p1, p2; w bloku main"
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Zmienna p2 otrzymuje domyślną wartość zero.',
+      correct: false,
+      explanation: 'Zmienne automatyczne bez inicjalizacji mają niezdefiniowaną wartość.'
+    },
+    {
+      id: 'b',
+      text: 'Do p1 można przypisać adres zmiennej typu int.',
+      correct: true,
+      explanation: 'p1 jest wskaźnikiem do int i może przechowywać adres dowolnej zmiennej typu int.'
+    },
+    {
+      id: 'c',
+      text: 'p1 i p2 są wskaźnikami typu int*.',
+      correct: false,
+      explanation: 'Tylko p1 jest wskaźnikiem — p2 jest zwykłą zmienną typu int.'
+    },
+    {
+      id: 'd',
+      text: 'Zmienna p2 nie istnieje poza funkcją main.',
+      correct: true,
+      explanation: 'Deklaracja znajduje się w bloku main, więc zmienne są lokalne.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 11 – Funkcje w C
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące funkcji w języku C."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Kompilator musi znać implementację funkcji przed jej użyciem.',
+      correct: false,
+      explanation: 'Wystarczy prototyp funkcji — implementacja może być w innym pliku.'
+    },
+    {
+      id: 'b',
+      text: 'Przekazując tablicę do funkcji, konieczne jest przekazanie także jej rozmiaru.',
+      correct: true,
+      explanation: 'Funkcja dostaje tylko wskaźnik — rozmiar nie jest przekazywany automatycznie.'
+    },
+    {
+      id: 'c',
+      text: 'Każda funkcja musi zwracać wartość.',
+      correct: false,
+      explanation: 'Funkcje typu void nie zwracają żadnej wartości.'
+    },
+    {
+      id: 'd',
+      text: 'Zmienne przekazywane do funkcji mogą zostać zmodyfikowane tylko przy użyciu wskaźników lub tablic.',
+      correct: true,
+      explanation: 'Argumenty przekazywane są przez wartość — aby zmodyfikować dane oryginalne, trzeba używać wskaźnika.'
+    }
+  ]}
+/>
+
+
+
+---
+
+## Pytanie 12 – Instrukcja if i wartości logiczne
+
+<QuizQuestion
+    question="Zaznacz poprawne odpowiedzi dotyczące instrukcji if i wartości logicznych w C."
+    multiple={true}
+    options={[
+        {
+            id: 'a',
+            text: 'W języku C każda wartość różna od zera jest traktowana jako prawda.',
+            correct: true,
+            explanation: 'Konwencja w C jest taka, że zero oznacza fałsz, a dowolna wartość niezerowa oznacza prawdę.'
+        },
+        {
+            id: 'b',
+            text: 'Typ bool jest wbudowany w każde wydanie standardu C i nie wymaga żadnych nagłówków.',
+            correct: false,
+            explanation: 'Typ bool jest zdefiniowany w nagłówku stdbool.h, nie jest słowem kluczowym takim jak w C++.'
+        },
+        {
+            id: 'c',
+            text: 'Instrukcja if może mieć pusty blok else, który nic nie robi.',
+            correct: true,
+            explanation: 'Można napisać if (warunek) instrukcja; else ; i blok else będzie pusty.'
+        },
+        {
+            id: 'd',
+            text: 'Instrukcja if zawsze wymaga nawiasów klamrowych wokół pojedynczej instrukcji.',
+            correct: false,
+            explanation: 'Jeśli w gałęzi if lub else jest tylko jedna instrukcja, klamry nie są wymagane, choć są zalecane ze względów stylu.'
+        }
+    ]}
+/>
+
+---
+
+## Pytanie 13 – Operatory logiczne
+
+<QuizQuestion
+    question="Zaznacz poprawne odpowiedzi dotyczące operatorów logicznych && i || w C."
+    multiple={true}
+    options={[
+        {
+            id: 'a',
+            text: 'Operator && zatrzymuje ewaluację gdy jego lewy operand jest równy zero.',
+            correct: true,
+            explanation: 'Jeżeli lewy operand && jest fałszywy, wynik całego wyrażenia jest fałszywy i prawy operand nie jest obliczany.'
+        },
+        {
+            id: 'b',
+            text: 'Operator || zawsze oblicza oba operandy, niezależnie od wartości pierwszego.',
+            correct: false,
+            explanation: 'Operator || ma krótkie spięcie, gdy lewy operand jest prawdziwy, prawy może nie zostać obliczony.'
+        },
+        {
+            id: 'c',
+            text: 'Operator ! zmienia dowolną wartość różną od zera na zero.',
+            correct: true,
+            explanation: 'Operator ! zamienia prawdę na fałsz, więc dowolna wartość niezerowa staje się zero.'
+        },
+        {
+            id: 'd',
+            text: 'Operator && ma niższy priorytet niż operator ||.',
+            correct: false,
+            explanation: 'W C operator && ma wyższy priorytet niż operator ||, czyli jest obliczany wcześniej.'
+        }
+    ]}
+/>
+
+---
+
+## Pytanie 14 – Losowanie liczb i srand
+
+Kod:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main(void) {
+    srand(time(NULL));
+    int x = rand() % 6 + 1;
+    int y = rand() % 6 + 1;
+    printf("x = %d, y = %d\n", x, y);
+    return 0;
+}
+````
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące powyższego programu z losowaniem."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Funkcja srand musi być wywołana przed każdym wywołaniem rand, aby liczby były losowe.',
+      correct: false,
+      explanation: 'Standardowa praktyka to jednokrotne wywołanie srand na początku programu, potem wiele wywołań rand.'
+    },
+    {
+      id: 'b',
+      text: 'Wyrażenie rand() % 6 + 1 generuje liczby całkowite z przedziału od 1 do 6 włącznie.',
+      correct: true,
+      explanation: 'Reszta z dzielenia przez 6 daje wartości od 0 do 5, po dodaniu 1 dostajemy zakres 1 do 6.'
+    },
+    {
+      id: 'c',
+      text: 'Jeśli usuniemy wywołanie srand, program zawsze wygeneruje tę samą sekwencję wartości x i y.',
+      correct: true,
+      explanation: 'Bez ziarna generator startuje z domyślną stałą wartością i generuje tę samą sekwencję w kolejnych uruchomieniach.'
+    },
+    {
+      id: 'd',
+      text: 'Wywołanie time(NULL) zwraca liczbę sekund od początku działania programu.',
+      correct: false,
+      explanation: 'time(NULL) zwraca czas w sekundach od epoki systemowej, zwykle 1 stycznia 1970.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 15 – Pętla while
+
+Kod:
+
+```c
+int tab[] = { 5, 4, 1, 2 };
+int tabSize = sizeof(tab) / sizeof(int);
+int i = 0;
+int indxMin = 0;
+while (i < tabSize) {
+    if (tab[i] < tab[indxMin]) {
+        indxMin = i;
+    }
+    i = i + 1;
+}
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące powyższej pętli while."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Po wykonaniu pętli zmienna indxMin wskazuje na indeks najmniejszego elementu tablicy.',
+      correct: true,
+      explanation: 'Pętla porównuje kolejne elementy z aktualnym minimum i aktualizuje indeks gdy znajdzie mniejszy element.'
+    },
+    {
+      id: 'b',
+      text: 'Pętla wykona się dokładnie tabSize razy.',
+      correct: true,
+      explanation: 'i jest zwiększane o jeden w każdej iteracji aż osiągnie wartość tabSize, co kończy pętlę.'
+    },
+    {
+      id: 'c',
+      text: 'Jeśli tabSize wyniesie zero, to pętla nie wykona się ani razu.',
+      correct: true,
+      explanation: 'Warunek i < tabSize będzie od razu fałszywy, więc ciało pętli nie zostanie wykonane.'
+    },
+    {
+      id: 'd',
+      text: 'Warunek i < tabSize zostanie sprawdzony dopiero po pierwszym wykonaniu ciała pętli.',
+      correct: false,
+      explanation: 'W pętli while warunek sprawdzany jest przed każdą iteracją, nie po.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 16 – Pętla do while
+
+Kod:
+
+```c
+int tab[] = { 5, 4, 1, 2 };
+int tabSize = sizeof(tab) / sizeof(int);
+int i = 0;
+int indxMin = 0;
+do {
+    if (tab[i] < tab[indxMin]) {
+        indxMin = i;
+    }
+    i = i + 1;
+} while (i < tabSize);
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące pętli do while w powyższym kodzie."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Pętla do while zawsze wykona ciało pętli co najmniej raz.',
+      correct: true,
+      explanation: 'Warunek w do while jest sprawdzany po wykonaniu ciała pętli.'
+    },
+    {
+      id: 'b',
+      text: 'Jeśli tabSize jest równe 0, kod zadziała poprawnie dla każdej instrukcji w ciele pętli.',
+      correct: false,
+      explanation: 'Dla tabSize równego 0 zmienna i ma wartość 0, więc odwołanie do tab[i] jest poza zakresem.'
+    },
+    {
+      id: 'c',
+      text: 'Pętla do while sprawdza warunek przed wykonaniem ciała pętli.',
+      correct: false,
+      explanation: 'To właśnie odróżnia do while od zwykłego while, warunek jest na końcu.'
+    },
+    {
+      id: 'd',
+      text: 'Dla dodatniego tabSize działanie pętli będzie analogiczne do pętli while z poprzedniego pytania.',
+      correct: true,
+      explanation: 'Dla tabSize większego od zera obie wersje wyszukują indeks minimum w tablicy.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 17 – break i continue w pętli
+
+Kod:
+
+```c
+int tab[] = { 1, 2, 3, 4, 5 };
+int tabSize = sizeof(tab) / sizeof(int);
+int found = 0;
+for (int i = 0; i < tabSize; ++i) {
+    if (tab[i] == 3) {
+        found = 1;
+        break;
+    }
+}
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące użycia break i continue."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Instrukcja break kończy całkowicie działanie pętli for.',
+      correct: true,
+      explanation: 'break wychodzi z najbliższej otaczającej pętli.'
+    },
+    {
+      id: 'b',
+      text: 'Instrukcja continue w pętli for pominęłaby resztę ciała pętli i przeszła do następnej iteracji.',
+      correct: true,
+      explanation: 'continue powoduje przejście do kolejnego obiegu pętli, wykonując wcześniej aktualizację licznika w for.'
+    },
+    {
+      id: 'c',
+      text: 'W pokazanym kodzie, po znalezieniu wartości 3, zmienna found zostanie ustawiona na zero.',
+      correct: false,
+      explanation: 'Po znalezieniu wartości 3 ustawiamy found na 1, a następnie przerywamy pętlę.'
+    },
+    {
+      id: 'd',
+      text: 'Nadmierne używanie break i continue jest uznawane za złą praktykę projektową.',
+      correct: true,
+      explanation: 'Częste stosowanie break i continue może utrudniać śledzenie logiki sterowania przepływem w programie.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 18 – Operator switch
+
+Kod:
+
+```c
+char lit = getchar();
+switch (lit) {
+    case 'd':
+        puts("Dodaj");
+        break;
+    case 'u':
+        puts("Usun");
+        break;
+    case 'q':
+        puts("Koniec");
+        break;
+    default:
+        puts("Nieznane polecenie");
+}
+````
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące instrukcji switch."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Instrukcja switch pozwala wybierać spośród wielu opcji na podstawie wartości wyrażenia.',
+      correct: true,
+      explanation: 'switch wybiera jedną z gałęzi zależnie od wartości porównywanej.'
+    },
+    {
+      id: 'b',
+      text: 'Typ wyrażenia w switch musi być typu całkowitego lub znakowego.',
+      correct: true,
+      explanation: 'Standard C dopuszcza typy całkowite: int, char, enum, long itd.'
+    },
+    {
+      id: 'c',
+      text: 'Instrukcja break jest konieczna, aby zapobiec przechodzeniu do kolejnych case.',
+      correct: true,
+      explanation: 'Bez break wykonanie spadnie do dalszych case (fallthrough).'
+    },
+    {
+      id: 'd',
+      text: 'Wartości w case mogą być zmiennymi, nie muszą być stałymi.',
+      correct: false,
+      explanation: 'case wymaga stałych czasu kompilacji.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 19 – scanf i bezpieczeństwo wejścia
+
+Kod:
+
+```c
+char napis[10];
+scanf("%s", napis);
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące działania scanf."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'scanf("%s", napis) może prowadzić do przepełnienia bufora.',
+      correct: true,
+      explanation: 'Bez limitu długości scanf może nadpisać pamięć poza tablicą.'
+    },
+    {
+      id: 'b',
+      text: 'Aby uniknąć błędu, można użyć formatu "%9s" dla tablicy o rozmiarze 10.',
+      correct: true,
+      explanation: 'Format ogranicza liczbę wczytywanych znaków, zostawiając miejsce na terminator.'
+    },
+    {
+      id: 'c',
+      text: 'scanf zwraca liczbę poprawnie wczytanych elementów wejścia.',
+      correct: true,
+      explanation: 'Zwraca np. 1 gdy sukces, 0 gdy błąd formatu, EOF przy końcu pliku.'
+    },
+    {
+      id: 'd',
+      text: 'scanf nie wymaga przekazywania adresu zmiennej.',
+      correct: false,
+      explanation: '%s wymaga przekazania wskaźnika, a dla liczb należy podać adres zmiennej (&x).'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 20 – Menu tekstowe i bufor wejściowy
+
+Kod:
+
+```c
+char wybor = ' ';
+while (wybor != 'q') {
+    wybor = getchar();
+    wyczyscBuf(); // funkcja czyszczaca bufor
+    switch (wybor) {
+        case 'd': puts("Dodaj"); break;
+        case 'u': puts("Usun"); break;
+        case 'q': puts("Koniec"); break;
+        default: puts("Nieznane"); break;
+    }
+}
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące obsługi menu tekstowego."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Funkcja wyczyscBuf usuwa pozostałe znaki z bufora wejściowego.',
+      correct: true,
+      explanation: 'Usuwa znaki aż do \n lub EOF.'
+    },
+    {
+      id: 'b',
+      text: 'Użycie getchar() w pętli wymaga czyszczenia bufora aby uniknąć wielokrotnego wykonania iteracji na jednym znaku.',
+      correct: true,
+      explanation: 'Bez czyszczenia bufora enter \n spowodowałby ponowne wejście do pętli.'
+    },
+    {
+      id: 'c',
+      text: 'Wartość zmiennej wybor może być z dowolnego typu, np. float.',
+      correct: false,
+      explanation: 'switch w C wymaga typu całkowitego lub znakowego.'
+    },
+    {
+      id: 'd',
+      text: 'Instrukcja default jest wymagana w switch.',
+      correct: false,
+      explanation: 'default jest opcjonalny, ale zalecany.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 21 – Priorytety operatorów
+
+Kod:
+
+```c
+a = b += c++ - d + --e / -f;
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące powyższego wyrażenia."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Wyrażenie zawiera zarówno preinkrementację jak i postinkrementację.',
+      correct: true,
+      explanation: 'Zawiera c++ (post) i --e (pre).'
+    },
+    {
+      id: 'b',
+      text: 'Operator dzielenia ma wyższy priorytet niż operator odejmowania.',
+      correct: true,
+      explanation: 'Najpierw wykonuje się dzielenie, potem dodawanie/odejmowanie.'
+    },
+    {
+      id: 'c',
+      text: 'Wyrażenie jest wolne od nieokreślonego zachowania.',
+      correct: false,
+      explanation: 'Zmienna b jest modyfikowana i odczytywana w złożonym kontekście, ale główny problem dotyczy e i c — różne punkty sekwencyjne.'
+    },
+    {
+      id: 'd',
+      text: 'Wyrażenie jest trudne w analizie i niezalecane w praktyce.',
+      correct: true,
+      explanation: 'Zgodnie ze standardami kodowania — takie wyrażenia obniżają czytelność i mogą prowadzić do błędów.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 22 – Funkcje i prototypy
+
+
+Biorąc pod uwagę poniższy kod, który ilustruje zależności między funkcjami:
+
+```c
+uint nwd(uint x, uint y);
+uint roznINwd(uint x, uint y);
+
+uint nwd(uint x, uint y) {
+    if (x > y) return roznINwd(x, y);
+    else return roznINwd(y, x);
+}
+````
+
+<QuizQuestion
+  question="Zaznacz **wszystkie** poprawne stwierdzenia dotyczące prototypów i mechanizmów zwracania funkcji w języku C, mając na uwadze surowe zasady kompilacji."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Prototyp funkcji (deklaracja) jest obowiązkowy, gdy funkcja wywołująca (`nwd`) znajduje się w kodzie źródłowym przed pełną definicją funkcji wywoływanej (`roznINwd`) — jest to jedyny sposób, aby kompilator poprawnie rozpoznał jej sygnaturę i typ zwracany.',
+      correct: true,
+      explanation: 'Prototyp musi być widoczny przed użyciem (wywołaniem). Bez niego kompilator przyjmie domyślnie `int`, co może prowadzić do cichych błędów, jeśli typ zwracany jest inny.'
+    },
+    {
+      id: 'b',
+      text: 'Deklarowanie funkcji przed definicją jest wymagane tylko w przypadku zależności cyklicznych (wzajemnych odwołań) lub wywołania z innego pliku modułu, ale nie jest konieczne, gdy funkcje są ułożone sekwencyjnie w jednym pliku, np. wszystkie definicje przed wszystkimi wywołaniami.',
+      correct: false,
+      explanation: 'Prototyp jest potrzebny zawsze, gdy wywołanie następuje przed definicją. Stwierdzenie to wprowadza w błąd, sugerując, że sekwencyjne ułożenie w jednym pliku zwalnia z obowiązku prototypowania, co jest błędem, jeśli funkcja wywoływana jest po prostu niżej w pliku źródłowym niż funkcja wywołująca.'
+    },
+    {
+      id: 'c',
+      text: 'Funkcja w C może zwrócić co najwyżej **jedną** wartość lub **jeden** złożony obiekt (np. strukturę), ale nie może bezpośrednio i jednocześnie zwracać wielu niezależnych typów prostych (np. `return 5, 10;`).',
+      correct: true,
+      explanation: 'Język C zezwala na zwrócenie tylko jednej wartości, chociaż może to być struktura agregująca wiele pól.'
+    },
+    {
+      id: 'd',
+      text: 'Aby poprawnie zadeklarować funkcję, która nie przyjmuje **żadnych** argumentów (np. `int fun();`), należy użyć słowa kluczowego `void` w nawiasach: `int fun(void);`, ponieważ samo `int fun();` w kontekście C oznacza, że lista argumentów jest nieznana i nie będzie sprawdzana przez kompilator.',
+      correct: true,
+      explanation: 'Jest to klasyczna pułapka języka C. Brak argumentów musi być jawnie wskazany przez `(void)`, inaczej kompilator C (nie C++) przyjmie nieznaną listę argumentów.'
+    }
+  ]}
+/>
+
+
+---
+
+## Pytanie 23 – Zmienne globalne
+
+Kod:
+
+```c
+int x = 7;
+
+int fun(void) {
+    return x + 3;
+}
+```
+
+<QuizQuestion
+  question="Zaznacz poprawne odpowiedzi dotyczące zmiennych globalnych."
+  multiple={true}
+  options={[
+    {
+      id: 'a',
+      text: 'Zmienne globalne mają czas życia równy czasowi działania programu.',
+      correct: true,
+      explanation: 'Tworzone są w sekcji danych statycznych.'
+    },
+    {
+      id: 'b',
+      text: 'Zmienne globalne są najlepszą metodą komunikacji między funkcjami.',
+      correct: false,
+      explanation: 'To zła praktyka — prowadzi do zależności i trudnych do śledzenia błędów.'
+    },
+    {
+      id: 'c',
+      text: 'Zmienne globalne mogą być modyfikowane w dowolnym miejscu programu.',
+      correct: true,
+      explanation: 'O ile nie są oznaczone const, mogą być zmieniane przez każdą funkcję.'
+    },
+    {
+      id: 'd',
+      text: 'Zmienne globalne są inicjalizowane tylko wtedy, gdy jawnie podamy wartość.',
+      correct: false,
+      explanation: 'Jeśli nie podamy inicjalizatora, są zerowane zgodnie ze standardem.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 24 – Zaawansowane wskaźniki i arytmetyka
+
+
+Kod:
+
+```c
+int tab[5] = {1, 2, 3, 4, 5};
+int *p = tab + 2;
+int x = *(p + 1) - *--p;
+```
+<QuizQuestion
+  question="Co przechowuje zmienna x po wykonaniu powyższego kodu, zgodnie z zasadami arytmetyki wskaźników i kolejności operacji w C?"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: '1',
+      correct: false,
+      explanation:
+        'Wynik 1 pojawia się, jeśli najpierw obliczymy *--p (p przechodzi z tab[2] na tab[1], wartość 2), a potem *(p + 1) (tab[2], wartość 3). Jednak standard C nie określa kolejności obliczania operandów operatora -, więc nie możemy zagwarantować tego wyniku.'
+    },
+    {
+      id: 'b',
+      text: '2',
+      correct: false,
+      explanation:
+        'Wynik 2 pojawia się, jeśli najpierw obliczymy *(p + 1) (tab[3], wartość 4), a potem *--p (tab[1], wartość 2). To też jest tylko jedna z możliwych ewaluacji; standard C nie narzuca kolejności, więc nie możemy powiedzieć, że x na pewno będzie równe 2.'
+    },
+    {
+      id: 'c',
+      text: '3',
+      correct: false,
+      explanation:
+        'Wynik 3 wymagałby jeszcze innej kombinacji założeń co do kolejności obliczeń. Kluczowe jest to, że w tym wyrażeniu nie mamy zdefiniowanej kolejności ewaluacji operandów operatora -, więc żaden konkretny wynik liczbowy nie jest gwarantowany.'
+    },
+    {
+      id: 'd',
+      text: 'Zachowanie nieokreślone (undefined behavior).',
+      correct: true,
+      explanation:
+        'W wyrażeniu *(p + 1) - *--p ten sam wskaźnik p jest jednocześnie modyfikowany (--p) i odczytywany (w (p + 1)) bez zdefiniowanej kolejności ewaluacji operandów operatora -. To narusza zasady sekwencjonowania w C i prowadzi do zachowania nieokreślonego – wynik może się różnić w zależności od kompilatora, opcji optymalizacji itd.'
+    }
+  ]}
+/>
+
+
+---
+
+## Pytanie 25 – Zaawansowane preprocesorowe sztuczki
+
+Kod:
+
+```c
+#define A 2+3
+int x = A * A;
+```
+
+<QuizQuestion
+  question="Jaka będzie wartość zmiennej x?"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: '25',
+      correct: false,
+      explanation: '25 byłoby poprawne, gdyby A było makrem o wartości (2+3).'
+    },
+    {
+      id: 'b',
+      text: '11',
+      correct: true,
+      explanation: 'Makro rozwija się do 2+3 * 2+3 = 2 + (3*2) + 3 = 2 + 6 + 3 = 11.'
+    },
+    {
+      id: 'c',
+      text: 'Zachowanie nieokreślone',
+      correct: false,
+      explanation: 'To zwykłe rozszerzenie makra — kod się poprawnie kompiluje.'
+    },
+    {
+      id: 'd',
+      text: '0',
+      correct: false,
+      explanation: 'Nie ma powodu, aby wynik wynosił 0.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 27 – Bardzo trudne: dereferencje wskaźników do funkcji
+
+Kod:
+
+```c
+int f(int x) { return x * x; }
+
+int g(int x) { return f(x) + 1; }
+
+int (*p)(int) = g;
+
+int y = (*p)(3);
+```
+
+<QuizQuestion
+  question='Co zostanie wypisane, jeśli wykonamy printf("%d", y)?'
+multiple={false}
+options={[
+    {
+      id: 'a',
+      text: '9',
+      correct: false,
+      explanation: 'f(3)=9, ale g(3)=f(3)+1.'
+    },
+{
+  id: 'b',
+    text: '10',
+  correct: true,
+  explanation: 'p wskazuje na g, więc y = g(3) = 10.'
+},
+{
+  id: 'c',
+    text: '3',
+  correct: false,
+  explanation: 'Wartość argumentu nie jest wynikiem funkcji.'
+},
+{
+  id: 'd',
+    text: 'Zachowanie nieokreślone',
+  correct: false,
+  explanation: 'Wskaźnik do funkcji jest poprawnie użyty.'
+}
+]}
+/>
+
+---
+
+## Pytanie 28 – Trudne: aliasing i wskaźniki
+
+Kod:
+
+```c
+int x = 5;
+float *p = (float*)&x;
+float y = *p;
+```
+
+<QuizQuestion
+  question="Co mówi standard C o powyższym kodzie?"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: 'Jest w pełni poprawny — można reinterpretować int jako float.',
+      correct: false,
+      explanation: 'Standard zabrania aliasowania różnych typów z wyjątkiem wyjątków — to łamie strict aliasing.'
+    },
+    {
+      id: 'b',
+      text: 'Zachowanie jest nieokreślone.',
+      correct: true,
+      explanation: 'Tak — reinterpretacja pamięci int jako float narusza zasady aliasingu.'
+    },
+    {
+      id: 'c',
+      text: 'Wynik zawsze będzie 0.',
+      correct: false,
+      explanation: 'Nie ma żadnej takiej gwarancji.'
+    },
+    {
+      id: 'd',
+      text: 'Kod się nie skompiluje.',
+      correct: false,
+      explanation: 'Kod się kompiluje — problem ujawnia się dopiero w czasie wykonania.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 29 – Funkcja modyfikująca parametr przez wartość i przez wskaźnik
+
+Kod:
+
+```c
+void mod1(int x) { x += 5; }
+void mod2(int *x) { *x += 5; }
+
+int a = 10;
+mod1(a);
+mod2(&a);
+```
+
+<QuizQuestion
+  question="Jaką końcową wartość ma zmienna a?"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: '10',
+      correct: false,
+      explanation: 'mod2 zmienia wartość a.'
+    },
+    {
+      id: 'b',
+      text: '15',
+      correct: true,
+      explanation: 'mod1 nie zmienia oryginału (kopiowana wartość), mod2 modyfikuje przez wskaźnik.'
+    },
+    {
+      id: 'c',
+      text: '20',
+      correct: false,
+      explanation: 'Tylko druga funkcja zmienia a.'
+    },
+    {
+      id: 'd',
+      text: 'Nieokreślone',
+      correct: false,
+      explanation: 'Kod jest jednoznaczny i poprawny.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 30 – Trudne struktury i wyrównanie pamięci
+
+Kod:
+
+```c
+struct S {
+    char a;
+    int b;
+    char c;
+};
+```
+
+<QuizQuestion
+  question="Jaki może być rozmiar struktury S na typowej implementacji?"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: '6 bajtów',
+      correct: false,
+      explanation: 'Mało prawdopodobne — int zwykle wymaga wyrównania.'
+    },
+    {
+      id: 'b',
+      text: '12 bajtów',
+      correct: true,
+      explanation: 'Najczęściej char + padding + int + char + padding daje 12 bajtów.'
+    },
+    {
+      id: 'c',
+      text: '1 bajt',
+      correct: false,
+      explanation: 'Struktura ma więcej niż jeden element.'
+    },
+    {
+      id: 'd',
+      text: 'Rozmiar zawsze wynosi 8 bajtów według standardu.',
+      correct: false,
+      explanation: 'Standard nie gwarantuje konkretnego rozmiaru.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 31 – Modyfikator const i funkcje
+
+Kod:
+
+```c
+void fun(const int *p) {
+    // ...
+}
+```
+
+<QuizQuestion
+  question="Co oznacza const w deklaracji const int *p?"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: 'Nie można modyfikować wskaźnika p.',
+      correct: false,
+      explanation: 'p można zmieniać — stała jest wartość wskazywana.'
+    },
+    {
+      id: 'b',
+      text: 'Nie można modyfikować wartości, na którą wskazuje p.',
+      correct: true,
+      explanation: 'const dotyczy obiektu, nie wskaźnika.'
+    },
+    {
+      id: 'c',
+      text: 'Nie można przypisać do p nowego adresu.',
+      correct: false,
+      explanation: 'To byłoby int * const p.'
+    },
+    {
+      id: 'd',
+      text: 'const nie ma znaczenia — można ignorować.',
+      correct: false,
+      explanation: 'Próba modyfikacji *p jest błędem kompilacji.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 32 – Bardzo trudne: pętla for i modyfikacja indeksu
+
+Kod:
+
+```c
+int x = 0;
+for (int i = 0; i < 5; ++i) {
+    i += 1;
+    x++;
+}
+```
+
+<QuizQuestion
+  question="Ile razy zostanie zwiększona zmienna x?"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: '5',
+      correct: false,
+      explanation: 'Nie — i jest modyfikowane wewnątrz pętli.'
+    },
+    {
+      id: 'b',
+      text: '3',
+      correct: true,
+      explanation: 'i zlicza: 0 → 2 → 4 → koniec. Pętla wykona się 3 razy.'
+    },
+    {
+      id: 'c',
+      text: '2',
+      correct: false,
+      explanation: 'Za mało iteracji.'
+    },
+    {
+      id: 'd',
+      text: 'Zachowanie nieokreślone',
+      correct: false,
+      explanation: 'Modyfikacja i w ciele pętli jest dozwolona.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 33 – Funkcja zagnieżdżona (trudne: użycie static)
+
+Kod:
+
+```c
+int fun(void) {
+    static int x = 0;
+    return ++x;
+}
+```
+
+<QuizQuestion
+  question="Jakie wartości zwróci kolejne wywołanie fun()? (pierwsze trzy)"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: '0, 1, 2',
+      correct: false,
+      explanation: 'static zaczyna od 0, ale ++x inkrementuje przed zwróceniem.'
+    },
+    {
+      id: 'b',
+      text: '1, 2, 3',
+      correct: true,
+      explanation: 'static pamięta wartość między wywołaniami — ++x daje sekwencję 1, 2, 3.'
+    },
+    {
+      id: 'c',
+      text: '1, 1, 1',
+      correct: false,
+      explanation: 'To dotyczyłoby zmiennej automatycznej, nie static.'
+    },
+    {
+      id: 'd',
+      text: 'Zachowanie nieokreślone',
+      correct: false,
+      explanation: 'Kod jest poprawny.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 34 – Tablice przekazywane do funkcji
+
+Kod:
+
+```c
+void foo(int t[10]) {
+    t[0] = 7;
+}
+```
+
+<QuizQuestion
+  question="Co faktycznie oznacza parametr t w funkcji foo?"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: 'Tablicę 10 elementów typu int.',
+      correct: false,
+      explanation: 'Tablica „zanika” do wskaźnika — deklaracja jest myląca.'
+    },
+    {
+      id: 'b',
+      text: 'Wskaźnik do int.',
+      correct: true,
+      explanation: 'Funkcja foo przyjmuje int*, nie tablicę.'
+    },
+    {
+      id: 'c',
+      text: 'Wskaźnik const int*.',
+      correct: false,
+      explanation: 'Brak const.'
+    },
+    {
+      id: 'd',
+      text: 'Referencję do tablicy.',
+      correct: false,
+      explanation: 'C nie ma referencji jak C++.'
+    }
+  ]}
+/>
+
+---
+
+## Pytanie 35 – Wyjątkowo trudne: kolejność ewaluacji argumentów
+
+Kod:
+
+```c
+int f(int a, int b) { return a - b; }
+int x = 5;
+int y = f(x++, x++);
+```
+
+<QuizQuestion
+  question="Jakie jest zachowanie powyższego programu?"
+  multiple={false}
+  options={[
+    {
+      id: 'a',
+      text: 'Wynik jest zawsze 0.',
+      correct: false,
+      explanation: 'Brak zdefiniowanej kolejności ewaluacji argumentów.'
+    },
+    {
+      id: 'b',
+      text: 'Wynik jest zawsze -1.',
+      correct: false,
+      explanation: 'To zależy od kolejności ewaluacji, której standard nie określa.'
+    },
+    {
+      id: 'c',
+      text: 'Zachowanie jest nieokreślone.',
+      correct: true,
+      explanation: 'Argumenty funkcji mogą być obliczone w dowolnej kolejności -> UB.'
+    },
+    {
+      id: 'd',
+      text: 'Program się nie skompiluje.',
+      correct: false,
+      explanation: 'Kompiluje się, ale wynik jest nieokreślony.'
+    }
+  ]}
+/>
+
+Jasne — **odtąd każdy blok MDX będzie miał kod źródłowy PRZED komponentem**, dokładnie tak jak sobie życzysz.
+
+Poniżej poprawiam poprzednie 10 pytań, tym razem **właściwy format: najpierw kod → potem `<QuizQuestion>`**.
+
+---
+
+## Więcej wskaźników
+
+```c
+int tab[] = {1,2,3,4};
+int *p = tab + 1;
+int x = (*p++) + (*p);
+```
+
+
+<QuizQuestion
+  question="Jaka jest wartość x po wykonaniu tych instrukcji?"
+  multiple={false}
+  options={[
+    { id:'a', text:'3', correct:false },
+    { id:'b', text:'4', correct:false },
+    { id:'c', text:'5', correct:false },
+    { id:'d', text:'Zachowanie nie jest określone przez standard', correct:true },
+  ]}
+/>
+
+---
+
+```c
+int t[2][3] = {{1,2,3},{4,5,6}};
+int (*p)[3] = t + 1;
+```
+
+<QuizQuestion
+  question="Które wyrażenie ma tę samą wartość co p[0][2]?"
+  multiple={true}
+  options={[
+    { id:'a', text:'t[1][2]', correct:true },
+    { id:'b', text:'(*p)[2]', correct:true },
+    { id:'c', text:'*(*(t+2)+0)', correct:false },
+    { id:'d', text:'*(*(t+1)+2)', correct:true },
+  ]}
+/>
+
+---
+
+```c
+int x = 10;
+int *p = &x;
+void *vp = p;
+```
+
+<QuizQuestion
+  question="Które przypisanie jest poprawne bez rzutowania?"
+  multiple={true}
+  options={[
+    { id:'a', text:'p = vp;', correct:false },
+    { id:'b', text:'vp = &x;', correct:true },
+    { id:'c', text:'vp = &vp;', correct:true },
+    { id:'d', text:'x = *(int*)vp;', correct:false },
+  ]}
+/>
+
+---
+
+
+```c
+int x = 1;
+const int *p = &x;
+int *q;
+```
+
+<QuizQuestion
+  question="Które z instrukcji są poprawne typologicznie?"
+  multiple={true}
+  options={[
+    { id:'a', text:'p = &x;', correct:true },
+    { id:'b', text:'q = p;', correct:false },
+    { id:'c', text:'p = q;', correct:true },
+    { id:'d', text:'*p = 5;', correct:false },
+  ]}
+/>
+
+---
+
+
+```c
+int f(int x){ return x+1; }
+int g(int x){ return x-1; }
+int (*pf[2])(int) = { f, g };
+```
+
+<QuizQuestion
+  question="Jaką wartość zwróci wyrażenie pf[1](10)?"
+  multiple={false}
+  options={[
+    { id:'a', text:'11', correct:false },
+    { id:'b', text:'9', correct:true },
+    { id:'c', text:'Zależy od implementacji', correct:false },
+    { id:'d', text:'Kod nie jest poprawny składniowo', correct:false },
+  ]}
+/>
+
+---
+
+```c
+int a[] = {3,4,5,6};
+int *p = a;
+int *q = a + 4;
+```
+
+<QuizQuestion
+  question="Które operacje są zgodne ze standardem (bez dereferencji)?"
+  multiple={true}
+  options={[
+    { id:'a', text:'p + 4', correct:true },
+    { id:'b', text:'q - 1', correct:true },
+    { id:'c', text:'q + 1', correct:false },
+    { id:'d', text:'p - 1', correct:false },
+  ]}
+/>
+
+---
+
+
+```c
+int x = 42;
+int *p = &x;
+int **pp = &p;
+```
+
+<QuizQuestion
+  question="Które przypisanie ustawi x = 100?"
+  multiple={true}
+  options={[
+    { id:'a', text:'*p = 100;', correct:true },
+    { id:'b', text:'**pp = 100;', correct:true },
+    { id:'c', text:'*&x = 100;', correct:true },
+    { id:'d', text:'*&p = 100;', correct:false },
+  ]}
+/>
+
+---
+
+```c
+int tab[4] = {1,2,3,4};
+int *p = tab;
+++*p;
+p += 2;
+*p += 10;
+```
+
+<QuizQuestion
+  question="Jakie będą wartości tablicy tab?"
+  multiple={false}
+  options={[
+    { id:'a', text:'{2,2,13,4}', correct:true },
+    { id:'b', text:'{1,2,13,4}', correct:false },
+    { id:'c', text:'{2,2,3,14}', correct:false },
+    { id:'d', text:'{1,3,13,4}', correct:false },
+  ]}
+/>
+
+---
+
+
+```c
+int t[3] = {1,2,3};
+int *p = t;
+```
+
+<QuizQuestion
+  question="Które z wyrażeń mają ten sam typ co p?"
+  multiple={true}
+  options={[
+    { id:'a', text:'t', correct:true },
+    { id:'b', text:'&t[0]', correct:true },
+    { id:'c', text:'&t', correct:false },
+    { id:'d', text:'t + 1', correct:true },
+  ]}
+/>
+
+---
+
+
+```c
+int x = 5;
+int *p = &x;
+const int **cpp = &p;
+```
+
+<QuizQuestion
+  question="Jak ocenić poprawność inicjalizacji const int **cpp = &p?"
+  multiple={false}
+  options={[
+    { id:'a', text:'Jest poprawna', correct:false },
+    { id:'b', text:'Jest niepoprawna – kompilator powinien zgłosić błąd', correct:true },
+    { id:'c', text:'Jest poprawna, ale skutkuje nieokreślonym zachowaniem', correct:false },
+    { id:'d', text:'Jest poprawna tylko jeśli x jest const', correct:false },
+  ]}
+/>
+
